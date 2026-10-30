@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>ZYRAXX - Silver Edition</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050507;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-silver: #A8A9AD;
+            --accent-silver-light: #C0C0C0;
+            --accent-green: #00ff88;
+            --gradient-primary: linear-gradient(135deg, #A8A9AD 0%, #C0C0C0 100%);
+            --text-main: #c0c0c0;
+            --text-white: #FFFFFF;
+            --text-gray: #9E9E9E;
+            --surface-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-deep);
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* ==================== BACKGROUND VIDEO FULLSCREEN ==================== */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -3;
+            filter: grayscale(0.6) brightness(0.7) contrast(1.1);
+        }
+
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(5, 5, 7, 0.7) 0%, rgba(5, 5, 7, 0.85) 70%);
+            z-index: -2;
+        }
+
+        .silver-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 35%, rgba(168, 169, 173, 0.15) 0%, transparent 60%, rgba(5, 5, 7, 0.5) 100%);
+            z-index: -1;
+        }
+
+        /* ==================== GLOW ORBS (Silver) ==================== */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+            animation: orbPulse 4s ease-in-out infinite alternate;
+        }
+
+        .glow-orb--top-left {
+            width: 320px;
+            height: 320px;
+            top: -120px;
+            left: -80px;
+            background: radial-gradient(circle, rgba(168, 169, 173, 0.25) 0%, rgba(168, 169, 173, 0.05) 40%, transparent 70%);
+            animation-delay: 0s;
+        }
+
+        .glow-orb--bottom-right {
+            width: 360px;
+            height: 360px;
+            bottom: -150px;
+            right: -100px;
+            background: radial-gradient(circle, rgba(192, 192, 192, 0.2) 0%, rgba(192, 192, 192, 0.05) 40%, transparent 70%);
+            animation-delay: 1.5s;
+        }
+
+        .glow-orb--top-right {
+            width: 150px;
+            height: 150px;
+            top: 200px;
+            right: -50px;
+            background: radial-gradient(circle, rgba(168, 169, 173, 0.1) 0%, rgba(168, 169, 173, 0.02) 40%, transparent 70%);
+            animation-delay: 0.8s;
+        }
+
+        @keyframes orbPulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
+        /* ==================== PAGE CONTAINERS ==================== */
+        .page {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 480px;
+            padding: 0 24px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+            padding-top: 40px;
+            padding-bottom: 20px;
+            animation: fadeSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeSlideIn {
+            0% { opacity: 0; transform: translateY(25px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== LANDING PAGE ELEMENTS ==================== */
+        .video-wrapper {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 24px;
+            position: relative;
+            border: 2.5px solid rgba(168, 169, 173, 0.6);
+            box-shadow: 0 0 60px rgba(168, 169, 173, 0.3), 0 0 120px rgba(168, 169, 173, 0.1), 0 15px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            background: #050507;
+            transition: box-shadow 0.6s ease;
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 21px;
+        }
+
+        .video-inner-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 21px;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(168, 169, 173, 0.15) 0%, transparent 40%, transparent 60%, rgba(168, 169, 173, 0.1) 100%);
+            z-index: 2;
+        }
+
+        .video-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            background: #050507;
+            border-radius: 21px;
+            transition: opacity 0.4s ease;
+        }
+
+        .video-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(168, 169, 173, 0.25);
+            border-top-color: #A8A9AD;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .sound-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(168, 169, 173, 0.5);
+            color: #A8A9AD;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+
+        .sound-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: #A8A9AD;
+            box-shadow: 0 0 18px rgba(168, 169, 173, 0.5);
+            transform: scale(1.08);
+        }
+
+        .title-gradient {
+            margin-top: 30px;
+            font-size: clamp(32px, 8vw, 40px);
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-align: center;
+            background: linear-gradient(135deg, #A8A9AD, #C0C0C0, #E8E8E8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            user-select: none;
+        }
+
+        .badge {
+            margin-top: 12px;
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 20px;
+            background: rgba(168, 169, 173, 0.1);
+            border: 1px solid rgba(168, 169, 173, 0.3);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            letter-spacing: 2px;
+            font-weight: 500;
+            text-align: center;
+            text-transform: uppercase;
+            user-select: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .glass-card {
+            margin-top: 30px;
+            width: 100%;
+            border-radius: 26px;
+            padding: 28px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            height: 55px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1.5px;
+            color: #050507;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #A8A9AD 0%, #C0C0C0 100%);
+            box-shadow: 0 8px 30px rgba(168, 169, 173, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .btn-primary:hover::after { transform: translateX(100%); }
+        .btn-primary:hover { box-shadow: 0 12px 40px rgba(168, 169, 173, 0.5); transform: translateY(-2px); }
+        .btn-primary:active { transform: scale(0.96); transition: all 0.1s ease; }
+
+        .btn-outline {
+            width: 100%;
+            height: 55px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            background: transparent;
+            border: 1.5px solid rgba(168, 169, 173, 0.5);
+            color: #C0C0C0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .btn-outline:hover {
+            background: rgba(168, 169, 173, 0.08);
+            border-color: #A8A9AD;
+            box-shadow: 0 0 30px rgba(168, 169, 173, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .contact-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .contact-btn {
+            flex: 1;
+            height: 48px;
+            border-radius: 14px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(168, 169, 173, 0.3);
+            color: #C0C0C0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .contact-btn:hover {
+            background: rgba(168, 169, 173, 0.1);
+            border-color: #A8A9AD;
+            box-shadow: 0 0 25px rgba(168, 169, 173, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            user-select: none;
+        }
+
+        /* ==================== LOGIN PAGE ELEMENTS ==================== */
+        .logo-wrapper {
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.04); }
+        }
+
+        .logo-video-container {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid rgba(168, 169, 173, 0.85);
+            box-shadow: 0 0 35px 5px rgba(168, 169, 173, 0.3);
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            position: relative;
+        }
+
+        .logo-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .login-title {
+            font-size: 40px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #A8A9AD, #C0C0C0, #E8E8E8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(168, 169, 173, 0.3));
+        }
+
+        .login-subtitle {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 20px;
+            background: rgba(168, 169, 173, 0.1);
+            border: 1px solid rgba(168, 169, 173, 0.3);
+            color: var(--text-gray);
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+
+        .login-glass-card {
+            width: 100%;
+            padding: 28px 24px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.45) 100%);
+            border: 1.5px solid rgba(168, 169, 173, 0.3);
+            box-shadow: 0 0 35px 10px rgba(168, 169, 173, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 14px;
+            border: 1px solid rgba(168, 169, 173, 0.3);
+            transition: border 0.3s;
+        }
+
+        .input-group:focus-within {
+            border-color: #A8A9AD;
+            box-shadow: 0 0 15px rgba(168, 169, 173, 0.2);
+        }
+
+        .prefix-icon {
+            position: absolute;
+            left: 12px;
+            font-size: 18px;
+            color: #A8A9AD;
+            background: rgba(168, 169, 173, 0.1);
+            border-radius: 10px;
+            padding: 8px;
+            width: 38px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 16px 16px 60px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(158, 158, 158, 0.55);
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .suffix-icon {
+            position: absolute;
+            right: 12px;
+            font-size: 17px;
+            color: rgba(168, 169, 173, 0.6);
+            cursor: pointer;
+            padding: 8px;
+            transition: 0.2s;
+        }
+
+        .suffix-icon:hover { color: #A8A9AD; }
+
+        .signin-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #A8A9AD, #C0C0C0);
+            box-shadow: 0 8px 25px rgba(168, 169, 173, 0.3);
+            color: #050507;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: opacity 0.3s, transform 0.2s;
+            position: relative;
+        }
+
+        .signin-btn:active { transform: scale(0.97); }
+        .signin-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .btn-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-spinner {
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(5, 5, 7, 0.3);
+            border-top: 3px solid #050507;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .buy-premium-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 30px;
+            background: transparent;
+            border: 1.5px solid rgba(168, 169, 173, 0.5);
+            color: #C0C0C0;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: 0.3s;
+            margin-bottom: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .buy-premium-btn:hover {
+            background: rgba(168, 169, 173, 0.1);
+            border-color: #A8A9AD;
+        }
+
+        .buy-icon {
+            background: linear-gradient(135deg, #A8A9AD, #C0C0C0);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #050507;
+            font-size: 15px;
+        }
+
+        .login-footer-text {
+            color: rgba(158, 158, 158, 0.4);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            font-weight: 400;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(168, 169, 173, 0.5);
+            color: #C0C0C0;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .back-btn:hover { background: rgba(168, 169, 173, 0.15); }
+
+        /* ==================== SPLASH PAGE STYLES ==================== */
+        .splash-container {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #050507;
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        .fullscreen-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(0.6) brightness(0.7);
+        }
+
+        .video-loader {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 7, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 15;
+            backdrop-filter: blur(2px);
+        }
+
+        .gradient-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 20%, transparent 0%, rgba(5, 5, 7, 0.65) 55%, rgba(5, 5, 7, 0.95) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .hero-text {
+            position: absolute;
+            bottom: 100px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .zyraxx-title {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #A8A9AD, #C0C0C0, #E8E8E8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(168, 169, 173, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .sub-text {
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+
+        .gradient-line {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #A8A9AD, #C0C0C0, #E8E8E8);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        .skip-btn {
+            position: absolute;
+            top: 50px;
+            right: 25px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(168, 169, 173, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            color: #C0C0C0;
+        }
+
+        .skip-btn:hover {
+            background: rgba(168, 169, 173, 0.2);
+            border-color: #A8A9AD;
+            transform: scale(1.02);
+        }
+
+        .copyright-splash {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            z-index: 10;
+            pointer-events: none;
+            font-family: monospace;
+        }
+
+        @media (max-width: 600px) {
+            .zyraxx-title { font-size: 38px; letter-spacing: 3px; }
+            .skip-btn { top: 20px; right: 16px; padding: 6px 14px; }
+            .hero-text { bottom: 70px; }
+        }
+
+        /* Modal Silver Theme */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-backdrop {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-dialog {
+            position: relative;
+            background: #0a0a0f;
+            border-radius: 20px;
+            border: 1px solid rgba(168, 169, 173, 0.5);
+            padding: 24px;
+            max-width: 340px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-icon {
+            padding: 8px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #A8A9AD, #C0C0C0);
+            color: #050507;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .modal-message {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-contact-admin {
+            background: rgba(168, 169, 173, 0.15);
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-contact-admin i { color: #A8A9AD; }
+
+        .btn-contact-admin:hover { background: rgba(168, 169, 173, 0.3); }
+
+        .btn-close-modal {
+            background: transparent;
+            border: none;
+            padding: 10px 20px;
+            color: #A8A9AD;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-close-modal:hover { background: rgba(168, 169, 173, 0.1); }
+    </style>
+</head>
+<body>
+
+    <!-- Background Video (lokal) -->
+    <video class="bg-video" autoplay muted loop playsinline id="bgVideo">
+        <source src="https://files.catbox.moe/gv3trm.mp4" type="video/mp4">
+    </video>
+    <div class="bg-overlay"></div>
+    <div class="silver-overlay"></div>
+
+    <!-- Glow Orbs Silver -->
+    <div class="glow-orb glow-orb--top-left"></div>
+    <div class="glow-orb glow-orb--bottom-right"></div>
+    <div class="glow-orb glow-orb--top-right"></div>
+
+    <!-- LANDING PAGE -->
+    <div class="page active" id="landingPage">
+        <div class="video-wrapper">
+            <div class="video-loading" id="videoLoading">
+                <div class="spinner"></div>
+            </div>
+            <video id="mainVideo" loop muted playsinline preload="metadata">
+                <source src="https://files.catbox.moe/zh8a6q.mp4" type="video/mp4">
+            </video>
+            <div class="video-inner-glow"></div>
+            <button class="sound-btn" id="soundBtn">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+        </div>
+        <h1 class="title-gradient">ZYRAXX</h1>
+        <span class="badge">APK BUG - ZEVRAX DEV</span>
+        <div class="glass-card">
+            <button class="btn-primary" id="goToLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            <a href="https://t.me/zrrprince" target="_blank" class="btn-outline">
+                <i class="fas fa-shopping-cart"></i> Buy Access
+            </a>
+            <div class="contact-row">
+                <a href="https://t.me/NULLCOMUNITY" target="_blank" class="contact-btn">
+                    <i class="fab fa-telegram"></i> Channel
+                </a>
+                <a href="https://t.me/zrrprince" target="_blank" class="contact-btn">
+                    <i class="fab fa-telegram"></i> Contact
+                </a>
+            </div>
+        </div>
+        <p class="footer-text">&copy; 2026 Zyraxx Project | @NULLCOMUNITY</p>
+    </div>
+
+    <!-- LOGIN PAGE -->
+    <div class="page" id="loginPage">
+        <div class="back-btn" id="backToLandingBtn">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+        
+        <!-- Logo Video Bulat -->
+        <div class="logo-wrapper">
+            <div class="logo-video-container">
+                <video class="logo-video" autoplay loop muted playsinline>
+                    <source src="https://files.catbox.moe/gv3trm.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        
+        <h1 class="login-title">Zyraxx</h1>
+        <div class="login-subtitle">APK BUG - ZEVRAX DEV</div>
+        
+        <!-- Form Login -->
+        <form id="loginForm" action="/auth" method="POST" style="width: 100%;">
+            <div class="login-glass-card">
+                <!-- Input Username -->
+                <div class="input-group">
+                    <i class="fas fa-user prefix-icon"></i>
+                    <input type="text" id="username" name="username" placeholder="Username" required autocomplete="off">
+                </div>
+                <!-- Input Key/Password -->
+                <div class="input-group">
+                    <i class="fas fa-key prefix-icon"></i>
+                    <input type="password" id="key" name="key" placeholder="Key" required>
+                    <i class="fas fa-eye-slash suffix-icon" id="togglePassword"></i>
+                </div>
+                <!-- Sign In Button -->
+                <button type="submit" class="signin-btn" id="signInBtn">
+                    <span class="btn-text">
+                        <i class="fas fa-sign-in-alt"></i> SIGN IN
+                    </span>
+                    <div class="btn-spinner" id="spinner"></div>
+                </button>
+            </div>
+        </form>
+        
+        <button class="buy-premium-btn" onclick="window.open('https://t.me/zrrprince', '_blank')">
+            <span class="buy-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </span>
+            BUY PREMIUM ACCESS
+        </button>
+        <div class="login-footer-text">Zyraxx Project | @zrrprince</div>
+    </div>
+
+    <!-- SPLASH PAGE -->
+    <div id="splashPage" style="display: none;">
+        <div class="splash-container">
+            <video id="splashVideo" class="fullscreen-video" muted playsinline autoplay preload="metadata">
+                <source src="https://files.catbox.moe/sjc9e2.mp4" type="video/mp4">
+            </video>
+            <div id="videoLoader" class="video-loader">
+                <div class="spinner"></div>
+            </div>
+            <div class="gradient-overlay"></div>
+            <div class="hero-text">
+                <div class="zyraxx-title">ZYRAXX</div>
+                <div class="sub-text">APK BUG - ZEVRAX DEV</div>
+                <div class="gradient-line"></div>
+            </div>
+            <div id="skipButton" class="skip-btn">
+                <span>SKIP</span>
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <div class="copyright-splash">&copy; 2026 Zyraxx Project | @zrrprince</div>
+        </div>
+    </div>
+
+    <!-- Modal Alert -->
+    <div class="modal" id="alertModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-dialog">
+            <div class="modal-title-row">
+                <div class="modal-icon" id="modalIcon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="modal-title" id="modalTitle">Error</div>
+            </div>
+            <div class="modal-message" id="modalMessage"></div>
+            <div class="modal-actions">
+                <button class="btn-contact-admin" id="btnContactAdmin" style="display:none;">
+                    <i class="fas fa-paper-plane"></i> Contact Admin
+                </button>
+                <button class="btn-close-modal" id="btnCloseModal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    (function() {
+        // DOM Elements
+        const bgVideo = document.getElementById('bgVideo');
+        const landingPage = document.getElementById('landingPage');
+        const loginPage = document.getElementById('loginPage');
+        const splashPageDiv = document.getElementById('splashPage');
+        const goToLoginBtn = document.getElementById('goToLoginBtn');
+        const backToLandingBtn = document.getElementById('backToLandingBtn');
+
+        const mainVideo = document.getElementById('mainVideo');
+        const videoLoading = document.getElementById('videoLoading');
+        const soundBtn = document.getElementById('soundBtn');
+
+        const togglePassword = document.getElementById('togglePassword');
+        const keyInput = document.getElementById('key');
+        const signInBtn = document.getElementById('signInBtn');
+        const spinner = document.getElementById('spinner');
+        const btnText = signInBtn.querySelector('.btn-text');
+        const usernameInput = document.getElementById('username');
+        const loginForm = document.getElementById('loginForm');
+
+        const alertModal = document.getElementById('alertModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalIcon = document.getElementById('modalIcon');
+        const btnContactAdmin = document.getElementById('btnContactAdmin');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+
+        const splashVideo = document.getElementById('splashVideo');
+        const splashLoader = document.getElementById('videoLoader');
+        const skipBtn = document.getElementById('skipButton');
+
+        // Server URLs
+        const AUTH_URL = '/auth';
+        const DASHBOARD_URL = '/dashboard';
+        const LOGIN_URL = '/login';
+
+        console.log('🔧 Zyraxx App Starting...');
+
+        bgVideo.muted = true;
+
+        // ==================== PAGE SWITCHING ====================
+        function switchPage(from, to) {
+            if (from) from.classList.remove('active');
+            if (to && to.classList) {
+                to.classList.add('active');
+                to.style.animation = 'none';
+                to.offsetHeight;
+                to.style.animation = 'fadeSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both';
+                
+                if (to === landingPage) {
+                    if (splashVideo) {
+                        splashVideo.pause();
+                        splashVideo.muted = true;
+                    }
+                }
+            } else if (to === splashPageDiv) {
+                if (from) from.style.display = 'none';
+                splashPageDiv.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                initSplash();
+            }
+            
+            const orbs = document.querySelectorAll('.glow-orb');
+            if (to === loginPage || to === splashPageDiv) {
+                orbs.forEach(orb => orb.style.display = 'none');
+            } else {
+                orbs.forEach(orb => orb.style.display = '');
+            }
+        }
+
+        function showSplash() {
+            mainVideo.muted = true;
+            isSmallVideoMuted = true;
+            soundBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            
+            landingPage.classList.remove('active');
+            loginPage.classList.remove('active');
+            landingPage.style.display = 'none';
+            loginPage.style.display = 'none';
+            splashPageDiv.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            initSplash();
+        }
+
+        goToLoginBtn.addEventListener('click', () => switchPage(landingPage, loginPage));
+        backToLandingBtn.addEventListener('click', () => switchPage(loginPage, landingPage));
+
+        // ==================== VIDEO HANDLING ====================
+        function hideLoading() {
+            if (mainVideo.readyState >= 3) videoLoading.classList.add('hidden');
+        }
+        mainVideo.addEventListener('loadeddata', hideLoading);
+        mainVideo.addEventListener('canplay', hideLoading);
+        mainVideo.addEventListener('playing', hideLoading);
+        setTimeout(hideLoading, 3000);
+
+        function attemptPlaySmallVideo() {
+            const playPromise = mainVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => hideLoading()).catch(() => {
+                    videoLoading.innerHTML = '<span style="color:#A8A9AD;font-size:13px;">Tap to play</span>';
+                    const playOnce = () => {
+                        mainVideo.play().then(() => videoLoading.classList.add('hidden')).catch(() => {});
+                        mainVideo.removeEventListener('click', playOnce);
+                        videoLoading.removeEventListener('click', playOnce);
+                    };
+                    mainVideo.addEventListener('click', playOnce);
+                    videoLoading.addEventListener('click', playOnce);
+                    videoLoading.style.cursor = 'pointer';
+                });
+            }
+        }
+        attemptPlaySmallVideo();
+
+        // Sound toggle
+        let isSmallVideoMuted = true;
+        soundBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isSmallVideoMuted) {
+                mainVideo.muted = false;
+                mainVideo.volume = 1.0;
+                isSmallVideoMuted = false;
+                soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                mainVideo.muted = true;
+                isSmallVideoMuted = true;
+                soundBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+            soundBtn.style.transform = 'scale(1.2)';
+            setTimeout(() => soundBtn.style.transform = '', 150);
+        });
+
+        // Key visibility toggle
+        togglePassword.addEventListener('click', () => {
+            const type = keyInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            keyInput.setAttribute('type', type);
+            togglePassword.className = type === 'password' ? 'fas fa-eye-slash suffix-icon' : 'fas fa-eye suffix-icon';
+        });
+
+        // ==================== MODAL ALERT ====================
+        function showAlert(title, message, showContact = false) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            const iconEl = modalIcon.querySelector('i');
+            if (title.toLowerCase().includes('error') || title.toLowerCase().includes('gagal')) {
+                iconEl.className = 'fas fa-exclamation-triangle';
+            } else if (title.toLowerCase().includes('expired')) {
+                iconEl.className = 'fas fa-clock';
+            } else {
+                iconEl.className = 'fas fa-info-circle';
+            }
+            btnContactAdmin.style.display = showContact ? 'flex' : 'none';
+            alertModal.classList.add('active');
+        }
+
+        function closeModal() {
+            alertModal.classList.remove('active');
+        }
+
+        btnCloseModal.addEventListener('click', closeModal);
+        document.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+        btnContactAdmin.addEventListener('click', () => window.open('https://t.me/zrrprince', '_blank'));
+
+        // ==================== SPLASH SCREEN ====================
+        let isRedirecting = false;
+
+        function redirectToDashboard() {
+            if (isRedirecting) return;
+            isRedirecting = true;
+            
+            if (splashVideo) {
+                splashVideo.muted = true;
+            }
+            
+            console.log('🚀 Redirecting to dashboard...');
+            window.location.href = DASHBOARD_URL;
+        }
+
+        function initSplash() {
+            if (!splashVideo.src || splashVideo.src.indexOf('https://files.catbox.moe/sjc9e2.mp4') === -1) {
+                splashVideo.src = 'https://files.catbox.moe/sjc9e2.mp4';
+                splashVideo.load();
+            }
+            
+            splashVideo.muted = false;
+            splashVideo.volume = 1.0;
+            
+            splashVideo.addEventListener('loadedmetadata', () => {
+                if (splashLoader) splashLoader.style.display = 'none';
+            });
+            
+            splashVideo.addEventListener('error', () => {
+                if (splashLoader) splashLoader.style.display = 'none';
+                setTimeout(() => redirectToDashboard(), 2000);
+            });
+            
+            splashVideo.addEventListener('ended', () => {
+                console.log('✅ Splash video ended, redirecting...');
+                redirectToDashboard();
+            });
+            
+            skipBtn.onclick = () => {
+                if (!isRedirecting) {
+                    console.log('⏩ Skip button clicked');
+                    if (splashVideo && !splashVideo.paused) {
+                        splashVideo.pause();
+                        splashVideo.muted = true;
+                    }
+                    redirectToDashboard();
+                }
+            };
+            
+            splashVideo.play().catch(() => {
+                if (splashLoader) splashLoader.style.display = 'none';
+                setTimeout(() => redirectToDashboard(), 3000);
+            });
+            
+            // Timeout fallback
+            setTimeout(() => {
+                if (!isRedirecting) {
+                    console.log('⏰ Splash timeout, force redirecting...');
+                    redirectToDashboard();
+                }
+            }, 30000);
+            
+            setTimeout(() => {
+                if (splashLoader && splashLoader.style.display !== 'none') {
+                    splashLoader.style.display = 'none';
+                }
+            }, 5000);
+        }
+
+        // ==================== COOKIE HELPERS ====================
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        // ==================== CHECK SERVER MESSAGE ====================
+        function checkServerMessage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const msg = urlParams.get('msg');
+            
+            if (msg) {
+                console.log('📩 Server message:', msg);
+                showAlert('Info', decodeURIComponent(msg), true);
+                
+                if (window.history.replaceState) {
+                    const newUrl = window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
+                }
+            }
+        }
+
+        // ==================== LOGIN HANDLER - FETCH API ====================
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // ⛔ STOP form submit normal
+            
+            const username = usernameInput.value.trim();
+            const key = keyInput.value.trim();
+            
+            if (!username || !key) {
+                showAlert('Error', 'Username dan Key harus diisi.', false);
+                return;
+            }
+            
+            // Loading state
+            signInBtn.disabled = true;
+            spinner.style.display = 'block';
+            btnText.style.display = 'none';
+            
+            // Simpan data ke session storage
+            sessionStorage.setItem('zyraxx_user', JSON.stringify({
+                username: username,
+                loginTime: new Date().toISOString()
+            }));
+            
+            // Kirim data via fetch
+            const formData = new URLSearchParams();
+            formData.append('username', username);
+            formData.append('key', key);
+            
+            console.log('🔐 Sending login request...');
+            
+            fetch(AUTH_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData.toString(),
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response URL:', response.url);
+                
+                const finalUrl = response.url;
+                
+                // Cek apakah redirect ke dashboard
+                if (finalUrl.includes('/dashboard')) {
+                    console.log('✅ Login successful!');
+                    // Tampilkan splash screen
+                    showSplash();
+                    return;
+                }
+                
+                // Cek apakah redirect ke login (gagal)
+                if (finalUrl.includes('/login')) {
+                    const urlObj = new URL(finalUrl);
+                    const msg = urlObj.searchParams.get('msg');
+                    throw new Error(msg || 'Username atau Key salah!');
+                }
+                
+                // Cek response body untuk pesan error
+                return response.text().then(text => {
+                    if (text.includes('error') || text.includes('gagal') || text.includes('salah')) {
+                        throw new Error('Username atau Key salah!');
+                    }
+                    // Jika tidak jelas, anggap sukses
+                    console.log('✅ Login successful (fallback check)!');
+                    showSplash();
+                });
+            })
+            .catch(error => {
+                console.error('❌ Login error:', error);
+                signInBtn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.style.display = 'flex';
+                showAlert('Login Gagal', error.message, true);
+            });
+        });
+
+        // ==================== INITIALIZATION ====================
+        function initApp() {
+            console.log('🚀 Initializing Zyraxx App...');
+            console.log('📍 Auth URL:', AUTH_URL);
+            console.log('📍 Dashboard URL:', DASHBOARD_URL);
+            
+            // Cek pesan dari server
+            checkServerMessage();
+            
+            // Cek session yang ada
+            const sessionUser = getCookie('sessionUser');
+            if (sessionUser) {
+                console.log('👋 Existing session found:', sessionUser);
+            }
+            
+            // Start background video
+            bgVideo.play().catch(() => {});
+            
+            console.log('✅ Zyraxx App Ready!');
+        }
+
+        // Start
+        initApp();
+    })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Video</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: black;
+            overflow: hidden; /* Mencegah scrollbar */
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Kontainer video memenuhi seluruh layar */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+
+        /* Video menyesuaikan ukuran layar dengan mempertahankan rasio aspek */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 'cover' akan memotong, 'contain' akan menunjukkan seluruh video */
+            background-color: black;
+        }
+
+        /* Opsi tambahan: jika ingin video benar-benar full tanpa batas hitam, gunakan object-fit: cover */
+        /* Tapi 'contain' lebih aman untuk melihat keseluruhan konten video */
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="myVideo" controls autoplay playsinline>
+            <source src="https://c.termai.cc/v177/GchxP1.mp4" type="video/mp4">
+            Browser Anda tidak mendukung tag video.
+        </video>
+    </div>
+
+    <script>
+        // Pastikan video berusaha diputar otomatis (namun browser modern sering memblokir autoplay dengan suara)
+        const video = document.getElementById('myVideo');
+        
+        // Coba putar video, jika gagal (karena kebijakan autoplay), setidaknya controls tetap ada
+        video.play().catch(e => {
+            console.log("Autoplay tidak diizinkan oleh browser. Pengguna perlu klik play secara manual.");
+            // Tampilkan pesan singkat (opsional) - bisa dihilangkan jika tidak perlu
+            // alert("Klik tombol play untuk memutar video");
+        });
+
+        // Opsional: menangani ketika video gagal dimuat
+        video.addEventListener('error', (e) => {
+            console.error('Error memuat video:', e);
+            // Tampilkan pesan error di video (agar pengguna tahu)
+            video.poster = ''; // tidak ada poster
+            // Kita bisa buat teks error di dalam video jika diperlukan, namun biarkan saja default browser
+        });
+    </script>
+</body>
+</html>

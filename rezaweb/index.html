@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PanSkip - Layanan Bypass Shortlink & Iklan Gratis</title>
+  
+  <!-- Favicon / Logo Tab -->
+  <link rel="icon" href="https://i.ibb.co.com/q3d0fgTT/image.png" type="image/x-icon" />
+  <link rel="shortcut icon" href="https://i.ibb.co.com/q3d0fgTT/image.png" type="image/x-icon" />
+  
+  <!-- Supabase Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <!-- Integrasi Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. VARIABEL & SISTEM DESAIN
+       ========================================================================== */
+    :root {
+      --bg-base: #09090b;
+      --bg-surface: #121215;
+      --bg-card: #18181b;
+      --bg-card-hover: #222226;
+      --bg-input: #0f0f12;
+      
+      --border-color: #27272a;
+      --border-focus: #52525b;
+      
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+      
+      --accent-primary: #ffffff;
+      --accent-hover: #e4e4e7;
+      --accent-text: #000000;
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+      
+      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 25px rgba(255, 255, 255, 0.05);
+      
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #f1f5f9;
+      --bg-card-hover: #e2e8f0;
+      --bg-input: #ffffff;
+      
+      --border-color: #e2e8f0;
+      --border-focus: #94a3b8;
+      
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      
+      --accent-primary: #0f172a;
+      --accent-hover: #1e293b;
+      --accent-text: #ffffff;
+      
+      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.05);
+      --shadow-glow: 0 0 25px rgba(0, 0, 0, 0.03);
+    }
+
+    /* ==========================================================================
+       2. RESET BROWSER & GENERAL STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    ::selection {
+      background-color: #3f3f46;
+      color: #ffffff;
+    }
+
+    *:focus,
+    *:focus-visible {
+      outline: none !important;
+      box-shadow: none;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    button, input, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      border: none;
+      background: none;
+    }
+
+    /* ==========================================================================
+       3. INTRO LOADING SCREEN ANIMATED
+       ========================================================================== */
+    #loader-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--bg-base);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #loader-wrapper.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .loader-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    .loader-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, var(--text-main) 0%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .loader-progress-bar {
+      width: 220px;
+      height: 4px;
+      background: var(--bg-card);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .loader-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #a855f7, #3b82f6);
+      border-radius: var(--radius-pill);
+      transition: width 0.3s ease;
+    }
+
+    .loader-text-status {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      min-height: 20px;
+      animation: fadeInUp 0.3s ease forwards;
+    }
+
+    /* ==========================================================================
+       4. ANIMASI KEYFRAME & EFEK RIPPLE
+       ========================================================================== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.8; }
+    }
+
+    .animate-fade {
+      animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+    .touch-effect {
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .touch-effect:active {
+      transform: scale(0.96) !important;
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(0);
+      animation: ripple-animation 0.5s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ==========================================================================
+       5. KONTAINER LAYOUT & NAVBAR
+       ========================================================================== */
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      padding: 0 24px;
+      margin: 0 auto;
+    }
+
+    .header {
+      width: 100%;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(9, 9, 11, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: var(--transition);
+    }
+    
+    [data-theme="light"] .header {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-logo-img {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .brand:hover .brand-logo-img {
+      transform: rotate(-6deg) scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: var(--text-main);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-icon-action {
+      width: 42px;
+      height: 42px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-icon-action:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+    }
+
+    .icon-sun { display: none; }
+    .icon-moon { display: block; }
+    [data-theme="light"] .icon-sun { display: block; }
+    [data-theme="light"] .icon-moon { display: none; }
+
+    /* ==========================================================================
+       6. HERO SECTION & TOMBOL AKSI UTAMA
+       ========================================================================== */
+    .hero {
+      padding: 90px 0 60px 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    .hero-title {
+      font-size: 3.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, var(--text-main) 0%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      max-width: 820px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 660px;
+      margin-bottom: 40px;
+    }
+
+    /* GAYA TOMBOL UTAMA */
+    .hero-actions-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-main-action {
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .btn-primary-hero {
+      background: var(--accent-primary);
+      color: var(--accent-text);
+      border: 1px solid transparent;
+    }
+
+    .btn-primary-hero:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary-hero {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary-hero:hover {
+      background: var(--bg-card);
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+    }
+
+    .supported-tags {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 40px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    .tag-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      transition: var(--transition);
+      cursor: default;
+    }
+
+    .tag-item:hover {
+      border-color: var(--border-focus);
+      color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       7. STATISTIK & KEUNGGULAN
+       ========================================================================== */
+    .stats-section {
+      width: 100%;
+      padding: 40px 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      margin: 40px 0 60px 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      text-align: center;
+    }
+
+    .stat-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .section-title-area {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-focus);
+      background: var(--bg-card);
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--text-main);
+      transition: var(--transition);
+    }
+
+    .feature-card:hover .card-icon {
+      background: var(--text-main);
+      color: var(--bg-base);
+      transform: scale(1.05);
+    }
+
+    .card-heading {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .card-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       8. SEKSI FAQ ACCORDION (MULUS)
+       ========================================================================== */
+    .faq-section {
+      width: 100%;
+      margin-bottom: 80px;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .faq-item:hover {
+      border-color: var(--border-focus);
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      cursor: pointer;
+      background: none;
+    }
+
+    .faq-chevron {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+      padding: 0 24px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* State Aktif FAQ Accordion */
+    .faq-item.active {
+      border-color: var(--border-focus);
+      background: var(--bg-card);
+    }
+
+    .faq-item.active .faq-chevron {
+      transform: rotate(180deg);
+      color: var(--text-main);
+    }
+
+    .faq-item.active .faq-answer {
+      padding-bottom: 20px;
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .custom-toast {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      max-width: 340px;
+    }
+
+    .custom-toast.success { border-color: #22c55e; }
+    .custom-toast.error { border-color: #ef4444; }
+    .custom-toast.info { border-color: #3b82f6; }
+
+    /* ==========================================================================
+       9. FOOTER
+       ========================================================================== */
+    .footer {
+      width: 100%;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      padding: 40px 0;
+      margin-top: auto;
+      transition: var(--transition);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .footer-link {
+      color: var(--text-muted);
+    }
+
+    .footer-link:hover {
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       10. RESPONSIVE DESIGN
+       ========================================================================== */
+    @media (max-width: 1023px) {
+      .hero-title { font-size: 2.6rem; }
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 767px) {
+      .container { padding: 0 16px; }
+      .nav-links { display: none; }
+      .hero { padding: 50px 0 32px 0; }
+      .hero-title { font-size: 2rem; }
+      .hero-subtitle { font-size: 0.95rem; }
+      .hero-actions-group { flex-direction: column; width: 100%; }
+      .btn-main-action { width: 100%; justify-content: center; }
+      .stats-grid { grid-template-columns: 1fr; gap: 12px; }
+      .cards-grid { grid-template-columns: 1fr; gap: 16px; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- INTRO LOADING SCREEN ANIMATED -->
+  <div id="loader-wrapper">
+    <div class="loader-content">
+      <img src="https://i.ibb.co.com/q3d0fgTT/image.png" alt="PanSkip Logo" class="loader-logo" />
+      <h2 class="loader-title">PANSKIP</h2>
+      <div class="loader-progress-bar">
+        <div class="loader-progress-fill" id="loader-fill"></div>
+      </div>
+      <div class="loader-text-status" id="loader-status">Memuat aset sistem...</div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- HEADER / NAVBAR -->
+  <header class="header">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="brand touch-effect">
+          <img src="https://i.ibb.co.com/q3d0fgTT/image.png" alt="PanSkip Logo" class="brand-logo-img" />
+          <span>PanSkip</span>
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="#features" class="nav-link">Fitur Utama</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+          <li><a href="https://webku.page.gd" class="nav-link">Dokumentasi</a></li>
+        </ul>
+
+        <div class="header-actions">
+          <button class="btn-icon-action touch-effect" id="theme-toggle" type="button" aria-label="Ganti Tema" title="Ganti Tema">
+            <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container">
+
+    <!-- HERO SECTION HARAMAN AWAL -->
+    <section class="hero">
+      <div class="hero-badge animate-fade delay-1">
+        <span class="status-dot"></span>
+        <span>Semua sistem beroperasi normal 99.9% Uptime</span>
+      </div>
+
+      <h1 class="hero-title animate-fade delay-2">PanSkip - Panda Link Skip</h1>
+      <p class="hero-subtitle animate-fade delay-3">Layanan bypass shortlink instan anti-ribet. Melewati Sub2Unlock, Linkvertise, LootLabs, Work.ink, dan sistem kunci tanpa iklan, captcha, atau waktu tunggu.</p>
+
+      <!-- DUA TOMBOL AKSI UTAMA -->
+      <div class="hero-actions-group animate-fade delay-4">
+        <a href="panskip.html" class="btn-main-action btn-primary-hero touch-effect">
+          <span>Mulai PanSkip</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+
+        <a href="document.html" class="btn-main-action btn-secondary-hero touch-effect">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          <span>Dokumentasi</span>
+        </a>
+      </div>
+
+      <!-- SUPPORTED PLATFORMS BADGES -->
+      <div class="supported-tags animate-fade delay-4">
+        <span>Populer:</span>
+        <span class="tag-item">Sub2Unlock</span>
+        <span class="tag-item">Linkvertise</span>
+        <span class="tag-item">LootLabs</span>
+        <span class="tag-item">Work.ink</span>
+        <span class="tag-item">Delta Key</span>
+        <span class="tag-item">Luarmor</span>
+      </div>
+    </section>
+
+    <!-- METRIK STATISTIK -->
+    <section class="stats-section animate-fade delay-4">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">50+</div>
+          <div class="stat-label">Layanan Didukung</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">6Juta+</div>
+          <div class="stat-label">Link Ter-bypass</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">24/7</div>
+          <div class="stat-label">Server Aktif</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FITUR KEUNGGULAN -->
+    <section id="features" style="margin-bottom: 80px;" class="animate-fade delay-4">
+      <div class="section-title-area">
+        <h2 class="section-title">Mengapa Menggunakan PanSkip?</h2>
+        <p class="section-desc">Dirancang untuk kecepatan, keamanan, dan keandalan tinggi.</p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="feature-card">
+          <div class="card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <h3 class="card-heading">100% Sisi Server</h3>
+          <p class="card-text">Semua proses diproses melalui server khusus. Peramban kamu tidak akan pernah menyentuh iklan berbahaya, pop-up, atau pelacak.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="card-heading">Bypass Instan</h3>
+          <p class="card-text">Melewati timer, tugas, survei, dan jebakan iklan banyak halaman secara otomatis. Dapatkan link tujuan rata-rata di bawah dua detik.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="card-heading">Tanpa Ekstensi</h3>
+          <p class="card-text">Tidak perlu memasang skrip atau ekstensi peramban yang berisiko. Bekerja mulus di komputer desktop, iOS, Android, dan semua jenis peramban.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKSI FAQ ACCORDION -->
+    <section id="faq" class="faq-section animate-fade delay-4">
+      <div class="section-title-area">
+        <h2 class="section-title">Pertanyaan Sering Diajukan (FAQ)</h2>
+        <p class="section-desc">Jawaban atas pertanyaan umum tentang pengoperasian PanSkip.</p>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Apa itu PanSkip?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>PanSkip adalah layanan bypass shortlink otomatis yang memungkinkan kamu melewati berbagai jenis tautan bersponsor, jebakan iklan, Sub2Unlock, dan sistem penguncian tanpa perlu menunggu waktu hitung mundur atau menyelesaikan tugas berlangganan.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Apakah layanan ini gratis digunakan?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Ya! Kamu dapat menggunakan PanSkip secara gratis untuk memproses berbagai shortlink favorit kamu.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Bagaimana cara mulai melakukan bypass tautan?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Cukup klik tombol <strong>Mulai PanSkip</strong> di atas untuk menuju ke halaman mesin bypass. Tempelkan tautan yang ingin di-bypass pada kolom yang disediakan dan tekan tombol proses.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Apakah aman digunakan di HP dan Komputer?</span>
+            <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Sangat aman. Proses dekripsi dilakukan 100% di sisi server kami. Peramban web kamu tidak akan pernah dialihkan ke situs web pihak ketiga yang berbahaya atau popup iklan berisiko.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>&copy; 2026 Mesin PanSkip. Dibuat dengan sepenuh hati.</div>
+        <ul class="footer-links">
+          <li><a href="terms.html" class="footer-link">Ketentuan</a></li>
+          <li><a href="privacy.html" class="footer-link">Privasi</a></li>
+          <li><a href="owner.html" class="footer-link">Pemilik</a></li>
+          <li><a href="document.html" class="footer-link">Dokumentasi</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIK & INTEGRASI -->
+  <script>
+    // 1. ANIMASI INTRO LOADING SCREEN
+    window.addEventListener('DOMContentLoaded', () => {
+      const fill = document.getElementById('loader-fill');
+      const statusText = document.getElementById('loader-status');
+      const loader = document.getElementById('loader-wrapper');
+
+      const steps = [
+        { progress: '30%', text: 'Memuat aset antarmuka...' },
+        { progress: '65%', text: 'Menghubungkan ke server...' },
+        { progress: '90%', text: 'Menyiapkan Mesin PanSkip...' },
+        { progress: '100%', text: 'Siap!' }
+      ];
+
+      let currentStep = 0;
+      const interval = setInterval(() => {
+        if (currentStep < steps.length) {
+          fill.style.width = steps[currentStep].progress;
+          statusText.textContent = steps[currentStep].text;
+          currentStep++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            loader.classList.add('fade-out');
+          }, 400);
+        }
+      }, 400);
+    });
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `custom-toast ${type}`;
+      
+      let icon = 'ℹ️';
+      if (type === 'success') icon = '✅';
+      if (type === 'error') icon = '❌';
+
+      toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // 2. DARK / LIGHT THEME TOGGLE
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      htmlElement.setAttribute('data-theme', newTheme);
+    });
+
+    // 3. RIPPLE CLICK FEEDBACK
+    document.querySelectorAll('.touch-effect').forEach(button => {
+      button.addEventListener('click', function (e) {
+        const circle = document.createElement('span');
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+
+        const rect = this.getBoundingClientRect();
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${e.clientX - rect.left - radius}px`;
+        circle.style.top = `${e.clientY - rect.top - radius}px`;
+        circle.classList.add('ripple');
+
+        const ripple = this.getElementsByClassName('ripple')[0];
+        if (ripple) ripple.remove();
+
+        this.appendChild(circle);
+      });
+    });
+
+    // 4. FAQ ACCORDION LOGIC (SMOOTH ANIMATION)
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const faqItem = button.parentElement;
+        const answer = faqItem.querySelector('.faq-answer');
+        const isActive = faqItem.classList.contains('active');
+
+        // Tutup item faq lain yang aktif
+        document.querySelectorAll('.faq-item.active').forEach(item => {
+          if (item !== faqItem) {
+            item.classList.remove('active');
+            item.querySelector('.faq-answer').style.maxHeight = 0;
+          }
+        });
+
+        // Toggle state aktif item ini
+        if (isActive) {
+          faqItem.classList.remove('active');
+          answer.style.maxHeight = 0;
+        } else {
+          faqItem.classList.add('active');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

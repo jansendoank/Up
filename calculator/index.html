@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>RGB Calculator Pro</title>
+<style>
+:root{--bg:#080b12;--panel:#111827;--key:#1b2636;--fg:#f8fafc;--muted:#94a3b8;--accent:#38bdf8}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:15px;background:var(--bg);color:var(--fg);font-family:system-ui,Arial,sans-serif}
+body.white{--bg:#edf2f7;--panel:#fff;--key:#e2e8f0;--fg:#172033;--muted:#64748b;--accent:#0284c7}
+body.dark{--bg:#080b12;--panel:#111827;--key:#1b2636;--fg:#f8fafc;--muted:#94a3b8;--accent:#38bdf8}
+.app{max-width:440px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;margin:5px 0 18px;gap:8px}
+h1{font-size:20px;margin:0;font-weight:900;letter-spacing:.5px}
+.rgbtext{color:#38bdf8}
+body.rgb .rgbtext{background:linear-gradient(90deg,#ff4141,#ffcb35,#27df75,#25caff,#a44bff,#ff4141);background-size:250% 100%;color:transparent;background-clip:text;-webkit-background-clip:text;animation:txt 7s linear infinite}
+@keyframes txt{to{background-position:250% 50%}}
+.circle{width:42px;height:42px;flex-shrink:0;border:1px solid #ffffff18;border-radius:13px;background:var(--panel);color:var(--fg);font-size:19px;cursor:pointer}
+.display{background:var(--panel);border:1px solid #ffffff12;border-radius:22px;padding:18px;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;margin-bottom:13px;overflow:hidden}
+.caption{font-size:11px;color:var(--muted);letter-spacing:1px}
+.expression{font-size:clamp(22px,6vw,32px);text-align:right;overflow-wrap:anywhere;min-height:40px;margin:8px 0}
+.result{font-size:clamp(29px,8vw,42px);font-weight:800;text-align:right;overflow-wrap:anywhere;min-height:50px}
+.toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.tool{padding:11px 3px;border:1px solid #ffffff16;border-radius:12px;background:var(--panel);color:var(--fg);font-size:12px;font-weight:700;cursor:pointer}
+.keys{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.key{height:59px;min-width:0;border:1px solid #ffffff12;border-radius:16px;background:var(--key);color:var(--fg);font-size:20px;font-weight:650;cursor:pointer}
+.key:active,.tool:active{filter:brightness(1.3);transform:scale(.98)}
+.key.op{color:var(--accent)}
+.key.equal{background:var(--accent);color:#fff}
+body.rgb .key.rgbkey{color:#fff!important;background:linear-gradient(115deg,#ed344c,#ed8b21,#16a96a,#087fc4,#7538c8,#ed344c);background-size:250% 250%;animation:btn 9s linear infinite}
+body.rgb .key.equal{color:#fff!important}
+@keyframes btn{to{background-position:250% 50%}}
+footer{text-align:center;color:var(--muted);font-size:10px;margin:17px 0 5px}
+.modal{display:none;position:fixed;inset:0;z-index:9999;padding:16px;background:#000b;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center}
+.modal.show{display:flex}
+.dialog{width:100%;max-width:390px;max-height:86dvh;overflow:auto;background:var(--panel);color:var(--fg);border:1px solid #ffffff25;border-radius:22px;padding:18px;box-shadow:0 20px 70px #0008}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.dialog-head h2{font-size:19px;margin:0}
+.close{width:36px;height:36px;flex-shrink:0;border:0;border-radius:11px;background:var(--key);color:var(--fg);font-size:23px;cursor:pointer}
+label{display:block;font-size:12px;color:var(--muted);margin:13px 0 6px}
+select{width:100%;padding:12px;border:1px solid #ffffff18;border-radius:11px;background:var(--key);color:var(--fg);font-size:14px}
+.preview{font-size:22px;font-weight:800;margin-top:10px;overflow-wrap:anywhere}
+.dialog-actions{display:flex;gap:8px;margin-top:17px}
+.dialog-actions button{flex:1;padding:11px 5px;border:1px solid #ffffff18;border-radius:11px;background:var(--key);color:var(--fg);cursor:pointer}
+.primary{background:var(--accent)!important;color:#fff!important}
+.history-row{padding:12px 2px;border-bottom:1px solid #ffffff14;overflow-wrap:anywhere;cursor:pointer}
+.history-row small{display:block;color:var(--muted);margin-bottom:4px}
+.empty{color:var(--muted);font-size:13px;padding:10px 0}
+</style>
+</head>
+<body class="rgb">
+<main class="app">
+<header>
+<h1 class="rgbtext" id="appTitle">RGB CALCULATOR</h1>
+<button class="circle" onclick="openModal('settingsModal')" id="settingsShortcut" aria-label="Settings">⚙</button>
+</header>
+
+<section class="display">
+<div class="caption" id="caption">CALCULATION</div>
+<div class="expression" id="expr">0</div>
+<div class="result rgbtext" id="result">0</div>
+</section>
+
+<div class="toolbar">
+<button class="tool" onclick="setTheme('rgb')" id="themeRGB">🌈 RGB</button>
+<button class="tool" onclick="setTheme('dark')" id="themeDark">🌑 Dark</button>
+<button class="tool" onclick="setTheme('white')" id="themeWhite">☀ White</button>
+</div>
+
+<section class="keys" id="keypad">
+<button class="key rgbkey op" data-action="clear">AC</button>
+<button class="key rgbkey op" data-action="back" aria-label="Delete">⌫</button>
+<button class="key rgbkey op" data-value="%">%</button>
+<button class="key rgbkey op" data-value="/">÷</button>
+<button class="key rgbkey" data-value="7">7</button>
+<button class="key rgbkey" data-value="8">8</button>
+<button class="key rgbkey" data-value="9">9</button>
+<button class="key rgbkey op" data-value="*">×</button>
+<button class="key rgbkey" data-value="4">4</button>
+<button class="key rgbkey" data-value="5">5</button>
+<button class="key rgbkey" data-value="6">6</button>
+<button class="key rgbkey op" data-value="-">−</button>
+<button class="key rgbkey" data-value="1">1</button>
+<button class="key rgbkey" data-value="2">2</button>
+<button class="key rgbkey" data-value="3">3</button>
+<button class="key rgbkey op" data-value="+">+</button>
+<button class="key rgbkey op" data-value="(">(</button>
+<button class="key rgbkey" data-value="0">0</button>
+<button class="key rgbkey" data-value=".">.</button>
+<button class="key rgbkey op" data-value=")">)</button>
+<button class="key rgbkey op" data-value="sqrt(">√</button>
+<button class="key rgbkey op" data-value="^">xʸ</button>
+<button class="key rgbkey op" data-value="pi">π</button>
+<button class="key equal" data-action="equals">=</button>
+</section>
+
+<div class="toolbar" style="margin-top:13px">
+<button class="tool" onclick="openModal('historyModal')" id="historyShortcut">◷ History</button>
+<button class="tool" onclick="openModal('zodiacModal')" id="zodiacShortcut">♈ Zodiac</button>
+<button class="tool" onclick="openModal('settingsModal')" id="settingsShortcut2">⚙ Settings</button>
+</div>
+<footer id="footerText">RGB CALCULATOR · OFFLINE</footer>
+</main>
+
+<div class="modal" id="settingsModal" onclick="backdropClose(event,'settingsModal')">
+<section class="dialog" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+<div class="dialog-head"><h2 id="settingsTitle">⚙ Settings</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div>
+<label for="language" id="languageLabel">Language</label>
+<select id="language">
+<option value="id">Bahasa Indonesia</option><option value="en">English</option>
+<option value="ar">العربية</option><option value="fa">فارسی</option><option value="ur">اردو</option>
+<option value="zh">简体中文</option><option value="zh-TW">繁體中文</option><option value="ja">日本語</option>
+<option value="ko">한국어</option><option value="ms">Bahasa Melayu</option><option value="hi">हिन्दी</option>
+<option value="bn">বাংলা</option><option value="th">ไทย</option><option value="vi">Tiếng Việt</option>
+<option value="fr">Français</option><option value="es">Español</option><option value="pt">Português</option>
+<option value="de">Deutsch</option><option value="ru">Русский</option><option value="tr">Türkçe</option>
+<option value="it">Italiano</option><option value="nl">Nederlands</option><option value="pl">Polski</option>
+<option value="uk">Українська</option><option value="he">עברית</option><option value="ta">தமிழ்</option>
+<option value="te">తెలుగు</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option>
+<option value="pa">ਪੰਜਾਬੀ</option><option value="sw">Kiswahili</option><option value="fil">Filipino</option>
+<option value="sv">Svenska</option><option value="no">Norsk</option><option value="da">Dansk</option>
+<option value="fi">Suomi</option><option value="el">Ελληνικά</option><option value="cs">Čeština</option>
+<option value="ro">Română</option><option value="hu">Magyar</option><option value="my">မြန်မာ</option>
+<option value="km">ខ្មែរ</option><option value="lo">ລາວ</option><option value="ne">नेपाली</option><option value="si">සිංහල</option>
+</select>
+<label for="digits" id="digitsLabel">Number format</label>
+<select id="digits">
+<option value="latn">1234567890 — Latin</option>
+<option value="arab">١٢٣٤٥٦٧٨٩٠ — Arabic</option>
+<option value="arabext">۱۲۳۴۵۶۷۸۹۰ — Persian</option>
+<option value="deva">१२३४५६७८९० — Devanagari</option>
+<option value="beng">১২৩৪৫৬৭৮৯০ — Bengali</option>
+<option value="thai">๑๒๓๔๕๖๗๘๙๐ — Thai</option>
+<option value="fullwide">１２３４５６７８９０ — Fullwidth</option>
+<option value="mymr">၁၂၃၄၅၆၇၈၉၀ — Myanmar</option>
+<option value="khmr">១២៣៤៥៦៧៨៩០ — Khmer</option>
+</select>
+<label id="previewLabel">Number preview</label>
+<div id="numberPreview" class="preview rgbtext">1234567890</div>
+<div class="dialog-actions"><button onclick="resetSettings()" id="resetButton">Reset</button><button class="primary" onclick="closeModal('settingsModal')" id="doneButton">Done</button></div>
+</section>
+</div>
+
+<div class="modal" id="historyModal" onclick="backdropClose(event,'historyModal')">
+<section class="dialog" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+<div class="dialog-head"><h2 id="historyTitle">◷ History</h2><button class="close" onclick="closeModal('historyModal')">×</button></div>
+<div id="historyList"></div>
+<div class="dialog-actions"><button onclick="clearHistory()" id="clearHistoryButton">Clear history</button><button class="primary" onclick="closeModal('historyModal')" id="historyDoneButton">Done</button></div>
+</section>
+</div>
+
+<div class="modal" id="zodiacModal" onclick="backdropClose(event,'zodiacModal')">
+<section class="dialog" role="dialog" aria-modal="true" aria-labelledby="zodiacTitle">
+<div class="dialog-head"><h2 id="zodiacTitle">♈ Zodiac signs</h2><button class="close" onclick="closeModal('zodiacModal')">×</button></div>
+<div id="zodiacList"></div>
+<div class="empty" id="zodiacNote">Zodiac symbols are not a separate number system.</div>
+</section>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+let expression="";
+let history=[];
+try{history=JSON.parse(localStorage.getItem("rgbcalc_history")||"[]");if(!Array.isArray(history))history=[]}catch(e){history=[]}
+
+const dictionaries={
+id:{title:"KALKULATOR RGB",calc:"PERHITUNGAN",settings:"Pengaturan",language:"Bahasa",digits:"Format angka",preview:"Pratinjau angka",history:"Riwayat",clear:"Hapus riwayat",zodiac:"Zodiak",done:"Selesai",reset:"Atur ulang",empty:"Belum ada riwayat",note:"Simbol zodiak bukan sistem angka tersendiri.",error:"Kesalahan",footer:"KALKULATOR RGB · OFFLINE",themeRGB:"🌈 RGB",themeDark:"🌑 Gelap",themeWhite:"☀ Putih",historyButton:"◷ Riwayat",zodiacButton:"♈ Zodiak",settingsButton:"⚙ Pengaturan",delete:"Hapus",clearAll:"Hapus semua riwayat"},
+en:{title:"RGB CALCULATOR",calc:"CALCULATION",settings:"Settings",language:"Language",digits:"Number format",preview:"Number preview",history:"History",clear:"Clear history",zodiac:"Zodiac signs",done:"Done",reset:"Reset",empty:"No history yet",note:"Zodiac symbols are not a separate number system.",error:"Error",footer:"RGB CALCULATOR · OFFLINE",themeRGB:"🌈 RGB",themeDark:"🌑 Dark",themeWhite:"☀ White",historyButton:"◷ History",zodiacButton:"♈ Zodiac",settingsButton:"⚙ Settings",delete:"Delete",clearAll:"Clear all history"},
+ar:{title:"آلة حاسبة RGB",calc:"الحساب",settings:"الإعدادات",language:"اللغة",digits:"تنسيق الأرقام",preview:"معاينة الأرقام",history:"السجل",clear:"مسح السجل",zodiac:"الأبراج",done:"تم",reset:"إعادة ضبط",empty:"لا يوجد سجل بعد",note:"رموز الأبراج ليست نظام أرقام مستقلًا.",error:"خطأ",footer:"آلة حاسبة RGB · دون اتصال",themeRGB:"🌈 RGB",themeDark:"🌑 داكن",themeWhite:"☀ أبيض",historyButton:"◷ السجل",zodiacButton:"♈ الأبراج",settingsButton:"⚙ الإعدادات",delete:"حذف",clearAll:"مسح السجل بالكامل"},
+fa:{title:"ماشین حساب RGB",calc:"محاسبه",settings:"تنظیمات",language:"زبان",digits:"قالب اعداد",preview:"پیش‌نمایش اعداد",history:"تاریخچه",clear:"پاک کردن تاریخچه",zodiac:"برج‌ها",done:"انجام شد",reset:"بازنشانی",empty:"تاریخچه‌ای وجود ندارد",note:"نمادهای برج‌ها سیستم عددی جداگانه‌ای نیستند.",error:"خطا",footer:"ماشین حساب RGB · آفلاین",themeRGB:"🌈 RGB",themeDark:"🌑 تیره",themeWhite:"☀ سفید",historyButton:"◷ تاریخچه",zodiacButton:"♈ برج‌ها",settingsButton:"⚙ تنظیمات",delete:"حذف",clearAll:"پاک کردن همه"},
+zh:{title:"RGB 计算器",calc:"计算",settings:"设置",language:"语言",digits:"数字格式",preview:"数字预览",history:"历史记录",clear:"清除记录",zodiac:"星座",done:"完成",reset:"重置",empty:"暂无历史记录",note:"星座符号不是独立的数字系统。",error:"错误",footer:"RGB 计算器 · 离线",themeRGB:"🌈 RGB",themeDark:"🌑 深色",themeWhite:"☀ 白色",historyButton:"◷ 历史",zodiacButton:"♈ 星座",settingsButton:"⚙ 设置",delete:"删除",clearAll:"清除所有记录"},
+"zh-TW":{title:"RGB 計算機",calc:"計算",settings:"設定",language:"語言",digits:"數字格式",preview:"數字預覽",history:"歷史紀錄",clear:"清除紀錄",zodiac:"星座",done:"完成",reset:"重設",empty:"尚無歷史紀錄",note:"星座符號不是獨立的數字系統。",error:"錯誤",footer:"RGB 計算機 · 離線",themeRGB:"🌈 RGB",themeDark:"🌑 深色",themeWhite:"☀ 白色",historyButton:"◷ 歷史",zodiacButton:"♈ 星座",settingsButton:"⚙ 設定",delete:"刪除",clearAll:"清除所有紀錄"},
+ja:{title:"RGB電卓",calc:"計算",settings:"設定",language:"言語",digits:"数字形式",preview:"数字プレビュー",history:"履歴",clear:"履歴を削除",zodiac:"星座",done:"完了",reset:"リセット",empty:"履歴はありません",note:"星座記号は独立した数字体系ではありません。",error:"エラー",footer:"RGB電卓 · オフライン",themeRGB:"🌈 RGB",themeDark:"🌑 ダーク",themeWhite:"☀ ホワイト",historyButton:"◷ 履歴",zodiacButton:"♈ 星座",settingsButton:"⚙ 設定",delete:"削除",clearAll:"履歴をすべて削除"},
+ko:{title:"RGB 계산기",calc:"계산",settings:"설정",language:"언어",digits:"숫자 형식",preview:"숫자 미리보기",history:"기록",clear:"기록 삭제",zodiac:"별자리",done:"완료",reset:"초기화",empty:"기록이 없습니다",note:"별자리 기호는 별도의 숫자 체계가 아닙니다.",error:"오류",footer:"RGB 계산기 · 오프라인",themeRGB:"🌈 RGB",themeDark:"🌑 어둡게",themeWhite:"☀ 흰색",historyButton:"◷ 기록",zodiacButton:"♈ 별자리",settingsButton:"⚙ 설정",delete:"삭제",clearAll:"모든 기록 삭제"},
+ms:{title:"KALKULATOR RGB",calc:"PENGIRAAN",settings:"Tetapan",language:"Bahasa",digits:"Format nombor",preview:"Pratonton nombor",history:"Sejarah",clear:"Padam sejarah",zodiac:"Zodiak",done:"Selesai",reset:"Tetapkan semula",empty:"Tiada sejarah",note:"Simbol zodiak bukan sistem nombor yang berasingan.",error:"Ralat",footer:"KALKULATOR RGB · LUAR TALIAN",themeRGB:"🌈 RGB",themeDark:"🌑 Gelap",themeWhite:"☀ Putih",historyButton:"◷ Sejarah",zodiacButton:"♈ Zodiak",settingsButton:"⚙ Tetapan",delete:"Padam",clearAll:"Padam semua sejarah"},
+hi:{title:"RGB कैलकुलेटर",calc:"गणना",settings:"सेटिंग",language:"भाषा",digits:"संख्या प्रारूप",preview:"संख्या पूर्वावलोकन",history:"इतिहास",clear:"इतिहास मिटाएँ",zodiac:"राशियाँ",done:"हो गया",reset:"रीसेट",empty:"कोई इतिहास नहीं",note:"राशि चिह्न अलग संख्या प्रणाली नहीं हैं।",error:"त्रुटि",footer:"RGB कैलकुलेटर · ऑफ़लाइन",themeRGB:"🌈 RGB",themeDark:"🌑 गहरा",themeWhite:"☀ सफेद",historyButton:"◷ इतिहास",zodiacButton:"♈ राशियाँ",settingsButton:"⚙ सेटिंग",delete:"हटाएँ",clearAll:"सभी इतिहास मिटाएँ"},
+bn:{title:"RGB ক্যালকুলেটর",calc:"হিসাব",settings:"সেটিংস",language:"ভাষা",digits:"সংখ্যার ধরন",preview:"সংখ্যার পূর্বরূপ",history:"ইতিহাস",clear:"ইতিহাস মুছুন",zodiac:"রাশি",done:"সম্পন্ন",reset:"রিসেট",empty:"কোনো ইতিহাস নেই",note:"রাশিচিহ্ন আলাদা সংখ্যা পদ্ধতি নয়।",error:"ত্রুটি",footer:"RGB ক্যালকুলেটর · অফলাইন",themeRGB:"🌈 RGB",themeDark:"🌑 গাঢ়",themeWhite:"☀ সাদা",historyButton:"◷ ইতিহাস",zodiacButton:"♈ রাশি",settingsButton:"⚙ সেটিংস",delete:"মুছুন",clearAll:"সব ইতিহাস মুছুন"},
+th:{title:"เครื่องคิดเลข RGB",calc:"การคำนวณ",settings:"การตั้งค่า",language:"ภาษา",digits:"รูปแบบตัวเลข",preview:"ตัวอย่างตัวเลข",history:"ประวัติ",clear:"ล้างประวัติ",zodiac:"ราศี",done:"เสร็จสิ้น",reset:"รีเซ็ต",empty:"ยังไม่มีประวัติ",note:"สัญลักษณ์ราศีไม่ใช่ระบบตัวเลขแยกต่างหาก",error:"ข้อผิดพลาด",footer:"เครื่องคิดเลข RGB · ออฟไลน์",themeRGB:"🌈 RGB",themeDark:"🌑 มืด",themeWhite:"☀ ขาว",historyButton:"◷ ประวัติ",zodiacButton:"♈ ราศี",settingsButton:"⚙ การตั้งค่า",delete:"ลบ",clearAll:"ล้างประวัติทั้งหมด"},
+fr:{title:"CALCULATRICE RGB",calc:"CALCUL",settings:"Paramètres",language:"Langue",digits:"Format numérique",preview:"Aperçu des nombres",history:"Historique",clear:"Effacer l’historique",zodiac:"Signes du zodiaque",done:"Terminé",reset:"Réinitialiser",empty:"Aucun historique",note:"Les signes du zodiaque ne sont pas un système numérique séparé.",error:"Erreur",footer:"CALCULATRICE RGB · HORS LIGNE",themeRGB:"🌈 RGB",themeDark:"🌑 Sombre",themeWhite:"☀ Blanc",historyButton:"◷ Historique",zodiacButton:"♈ Zodiaque",settingsButton:"⚙ Paramètres",delete:"Supprimer",clearAll:"Tout effacer"},
+es:{title:"CALCULADORA RGB",calc:"CÁLCULO",settings:"Ajustes",language:"Idioma",digits:"Formato numérico",preview:"Vista previa",history:"Historial",clear:"Borrar historial",zodiac:"Signos del zodiaco",done:"Listo",reset:"Restablecer",empty:"No hay historial",note:"Los símbolos zodiacales no son un sistema numérico independiente.",error:"Error",footer:"CALCULADORA RGB · SIN CONEXIÓN",themeRGB:"🌈 RGB",themeDark:"🌑 Oscuro",themeWhite:"☀ Blanco",historyButton:"◷ Historial",zodiacButton:"♈ Zodiaco",settingsButton:"⚙ Ajustes",delete:"Eliminar",clearAll:"Borrar todo"},
+de:{title:"RGB TASCHENRECHNER",calc:"BERECHNUNG",settings:"Einstellungen",language:"Sprache",digits:"Zahlenformat",preview:"Zahlvorschau",history:"Verlauf",clear:"Verlauf löschen",zodiac:"Tierkreiszeichen",done:"Fertig",reset:"Zurücksetzen",empty:"Kein Verlauf",note:"Tierkreiszeichen sind kein eigenes Zahlensystem.",error:"Fehler",footer:"RGB TASCHENRECHNER · OFFLINE",themeRGB:"🌈 RGB",themeDark:"🌑 Dunkel",themeWhite:"☀ Weiß",historyButton:"◷ Verlauf",zodiacButton:"♈ Tierkreis",settingsButton:"⚙ Einstellungen",delete:"Löschen",clearAll:"Verlauf löschen"},
+pt:{title:"CALCULADORA RGB",calc:"CÁLCULO",settings:"Configurações",language:"Idioma",digits:"Formato numérico",preview:"Prévia dos números",history:"Histórico",clear:"Limpar histórico",zodiac:"Signos do zodíaco",done:"Concluído",reset:"Redefinir",empty:"Sem histórico",note:"Os símbolos do zodíaco não são um sistema numérico separado.",error:"Erro",footer:"CALCULADORA RGB · OFFLINE",themeRGB:"🌈 RGB",themeDark:"🌑 Escuro",themeWhite:"☀ Branco",historyButton:"◷ Histórico",zodiacButton:"♈ Zodíaco",settingsButton:"⚙ Configurações",delete:"Excluir",clearAll:"Limpar todo o histórico"},
+ru:{title:"КАЛЬКУЛЯТОР RGB",calc:"ВЫЧИСЛЕНИЕ",settings:"Настройки",language:"Язык",digits:"Формат чисел",preview:"Предпросмотр чисел",history:"История",clear:"Очистить историю",zodiac:"Знаки зодиака",done:"Готово",reset:"Сбросить",empty:"История пуста",note:"Знаки зодиака не являются отдельной системой счисления.",error:"Ошибка",footer:"КАЛЬКУЛЯТОР RGB · ОФЛАЙН",themeRGB:"🌈 RGB",themeDark:"🌑 Тёмная",themeWhite:"☀ Белая",historyButton:"◷ История",zodiacButton:"♈ Зодиак",settingsButton:"⚙ Настройки",delete:"Удалить",clearAll:"Очистить всю историю"},
+tr:{title:"RGB HESAP MAKİNESİ",calc:"HESAPLAMA",settings:"Ayarlar",language:"Dil",digits:"Sayı biçimi",preview:"Sayı önizleme",history:"Geçmiş",clear:"Geçmişi temizle",zodiac:"Burçlar",done:"Tamam",reset:"Sıfırla",empty:"Geçmiş yok",note:"Burç sembolleri ayrı bir sayı sistemi değildir.",error:"Hata",footer:"RGB HESAP MAKİNESİ · ÇEVRİMDIŞI",themeRGB:"🌈 RGB",themeDark:"🌑 Koyu",themeWhite:"☀ Beyaz",historyButton:"◷ Geçmiş",zodiacButton:"♈ Burçlar",settingsButton:"⚙ Ayarlar",delete:"Sil",clearAll:"Tüm geçmişi temizle"}
+};
+
+const fallback={
+title:"RGB CALCULATOR",calc:"CALCULATION",settings:"Settings",language:"Language",digits:"Number format",preview:"Number preview",history:"History",clear:"Clear history",zodiac:"Zodiac signs",done:"Done",reset:"Reset",empty:"No history yet",note:"Zodiac symbols are not a separate number system.",error:"Error",footer:"RGB CALCULATOR · OFFLINE",themeRGB:"🌈 RGB",themeDark:"🌑 Dark",themeWhite:"☀ White",historyButton:"◷ History",zodiacButton:"♈ Zodiac",settingsButton:"⚙ Settings",delete:"Delete",clearAll:"Clear all history"
+};
+function T(){return dictionaries[$("language").value]||fallback}
+function save(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function load(k,d){try{return localStorage.getItem(k)||d}catch(e){return d}}
+
+window.setTheme=function(theme){
+ document.body.classList.remove("rgb","dark","white");
+ document.body.classList.add(theme);save("rgbcalc_theme",theme);
+};
+window.openModal=function(id){$(id).classList.add("show");document.body.style.overflow="hidden"};
+window.closeModal=function(id){
+ $(id).classList.remove("show");
+ if(!document.querySelector(".modal.show"))document.body.style.overflow="";
+};
+window.backdropClose=function(e,id){if(e.target===$(id))closeModal(id)};
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape")document.querySelectorAll(".modal.show").forEach(m=>closeModal(m.id));
+});
+
+function formatNumber(n){
+ const styles={latn:"en-US",arab:"ar",arabext:"fa",deva:"hi",beng:"bn",thai:"th",fullwide:"ja-JP-u-nu-fullwide",mymr:"my",khmr:"km"};
+ try{return new Intl.NumberFormat(styles[$("digits").value]||"en-US",{useGrouping:false,maximumFractionDigits:10}).format(n)}
+ catch(e){return String(n)}
+}
+function localizeExpression(s){
+ return s.replace(/\d+(?:\.\d+)?/g,m=>{
+  let n=Number(m);return Number.isFinite(n)?formatNumber(n):m;
+ });
+}
+
+/* Parser matematika tanpa eval */
+const Parser={
+ evaluate(s){
+  let i=0;
+  function ws(){while(i<s.length&&/\s/.test(s[i]))i++}
+  function eat(c){ws();if(s.slice(i,i+c.length)===c){i+=c.length;return true}return false}
+  function primary(){
+   ws();
+   if(eat("+"))return primary();
+   if(eat("-"))return -primary();
+   if(eat("(")){let v=add();if(!eat(")"))throw Error();return v}
+   if(eat("sqrt(")){let v=add();if(!eat(")")||v<0)throw Error();return Math.sqrt(v)}
+   if(eat("pi"))return Math.PI;
+   let m=s.slice(i).match(/^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/i);
+   if(!m)throw Error();
+   i+=m[0].length;return Number(m[0]);
+  }
+  function power(){let a=primary();if(eat("^"))a=Math.pow(a,power());return a}
+  function mul(){
+   let a=power();
+   while(true){
+    if(eat("*"))a*=power();
+    else if(eat("/")){let b=power();if(b===0)throw Error();a/=b}
+    else if(eat("%"))a%=power();
+    else break;
+   }return a;
+  }
+  function add(){
+   let a=mul();
+   while(true){if(eat("+"))a+=mul();else if(eat("-"))a-=mul();else break}
+   return a;
+  }
+  let v=add();ws();
+  if(i!==s.length||!Number.isFinite(v))throw Error();
+  return v;
+ }
+};
+
+function update(){
+ $("expr").textContent=expression?localizeExpression(expression):"0";
+ if(!expression){$("result").textContent="0";return}
+ try{$("result").textContent=formatNumber(Parser.evaluate(expression))}
+ catch(e){$("result").textContent="…"}
+}
+function add(v){expression+=v;update()}
+function clear(){expression="";update()}
+function back(){expression=expression.slice(0,-1);update()}
+function equals(){
+ if(!expression)return;
+ try{
+  let result=Parser.evaluate(expression);
+  history.unshift({e:expression,r:result});history=history.slice(0,50);
+  save("rgbcalc_history",JSON.stringify(history));
+  expression=String(Number(result.toPrecision(12)));
+  update();renderHistory();
+ }catch(e){$("result").textContent=T().error}
+}
+$("keypad").addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.action==="clear")clear();
+ else if(b.dataset.action==="back")back();
+ else if(b.dataset.action==="equals")equals();
+ else if(b.dataset.value)add(b.dataset.value);
+});
+
+function renderHistory(){
+ const box=$("historyList");box.replaceChildren();
+ if(!history.length){const d=document.createElement("div");d.className="empty";d.textContent=T().empty;box.append(d);return}
+ history.forEach(item=>{
+  const row=document.createElement("div");row.className="history-row";
+  const small=document.createElement("small");small.textContent=localizeExpression(item.e);
+  const strong=document.createElement("strong");strong.textContent=formatNumber(item.r);
+  row.append(small,strong);
+  row.addEventListener("click",()=>{expression=item.e;update();closeModal("historyModal")});
+  box.append(row);
+ });
+}
+window.clearHistory=function(){history=[];save("rgbcalc_history","[]");renderHistory()};
+
+function applyLanguage(){
+ const d=T(),lang=$("language").value;
+ document.documentElement.lang=lang;
+ document.documentElement.dir=["ar","fa","ur","he"].includes(lang)?"rtl":"ltr";
+ $("appTitle").textContent=d.title;
+ $("caption").textContent=d.calc;
+ $("settingsTitle").textContent="⚙ "+d.settings;
+ $("languageLabel").textContent=d.language;
+ $("digitsLabel").textContent=d.digits;
+ $("previewLabel").textContent=d.preview;
+ $("historyTitle").textContent="◷ "+d.history;
+ $("zodiacTitle").textContent="♈ "+d.zodiac;
+ $("zodiacNote").textContent=d.note;
+ $("resetButton").textContent=d.reset;
+ $("doneButton").textContent=d.done;
+ $("historyDoneButton").textContent=d.done;
+ $("clearHistoryButton").textContent=d.clear;
+ $("footerText").textContent=d.footer;
+ $("themeRGB").textContent=d.themeRGB;
+ $("themeDark").textContent=d.themeDark;
+ $("themeWhite").textContent=d.themeWhite;
+ $("historyShortcut").textContent=d.historyButton;
+ $("zodiacShortcut").textContent=d.zodiacButton;
+ $("settingsShortcut").textContent="⚙";
+ $("settingsShortcut").title=d.settings;
+ $("settingsShortcut2").textContent=d.settingsButton;
+ $("settingsShortcut2").title=d.settings;
+ $("keypad").querySelector('[data-action="clear"]').textContent="AC";
+ $("keypad").querySelector('[data-action="back"]').setAttribute("aria-label",d.delete);
+ $("numberPreview").textContent=formatNumber(1234567890);
+ save("rgbcalc_language",lang);
+ renderHistory();update();
+}
+
+window.resetSettings=function(){
+ $("language").value="id";$("digits").value="latn";
+ setTheme("rgb");applyLanguage();
+};
+$("language").addEventListener("change",applyLanguage);
+$("digits").addEventListener("change",()=>{
+ save("rgbcalc_digits",$("digits").value);
+ $("numberPreview").textContent=formatNumber(1234567890);
+ update();renderHistory();
+});
+
+const signs=[
+["♈","Aries","21 Mar – 19 Apr"],["♉","Taurus","20 Apr – 20 May"],
+["♊","Gemini","21 May – 20 Jun"],["♋","Cancer","21 Jun – 22 Jul"],
+["♌","Leo","23 Jul – 22 Aug"],["♍","Virgo","23 Aug – 22 Sep"],
+["♎","Libra","23 Sep – 22 Oct"],["♏","Scorpio","23 Oct – 21 Nov"],
+["♐","Sagittarius","22 Nov – 21 Dec"],["♑","Capricorn","22 Dec – 19 Jan"],
+["♒","Aquarius","20 Jan – 18 Feb"],["♓","Pisces","19 Feb – 20 Mar"]
+];
+const zodiacNames={
+id:["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagitarius","Kaprikornus","Aquarius","Pisces"],
+en:signs.map(x=>x[1]),
+ms:["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"],
+fr:["Bélier","Taureau","Gémeaux","Cancer","Lion","Vierge","Balance","Scorpion","Sagittaire","Capricorne","Verseau","Poissons"],
+es:["Aries","Tauro","Géminis","Cáncer","Leo","Virgo","Libra","Escorpio","Sagitario","Capricornio","Acuario","Piscis"],
+de:["Widder","Stier","Zwillinge","Krebs","Löwe","Jungfrau","Waage","Skorpion","Schütze","Steinbock","Wassermann","Fische"],
+pt:["Áries","Touro","Gêmeos","Câncer","Leão","Virgem","Libra","Escorpião","Sagitário","Capricórnio","Aquário","Peixes"],
+ru:["Овен","Телец","Близнецы","Рак","Лев","Дева","Весы","Скорпион","Стрелец","Козерог","Водолей","Рыбы"],
+tr:["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"],
+ja:["牡羊座","牡牛座","双子座","蟹座","獅子座","乙女座","天秤座","蠍座","射手座","山羊座","水瓶座","魚座"],
+zh:["白羊座","金牛座","双子座","巨蟹座","狮子座","处女座","天秤座","天蝎座","射手座","摩羯座","水瓶座","双鱼座"],
+"zh-TW":["牡羊座","金牛座","雙子座","巨蟹座","獅子座","處女座","天秤座","天蠍座","射手座","摩羯座","水瓶座","雙魚座"],
+ko:["양자리","황소자리","쌍둥이자리","게자리","사자자리","처녀자리","천칭자리","전갈자리","사수자리","염소자리","물병자리","물고기자리"],
+hi:["मेष","वृषभ","मिथुन","कर्क","सिंह","कन्या","तुला","वृश्चिक","धनु","मकर","कुंभ","मीन"],
+ar:["الحمل","الثور","الجوزاء","السرطان","الأسد","العذراء","الميزان","العقرب","القوس","الجدي","الدلو","الحوت"]
+};
+function renderZodiac(){
+ const box=$("zodiacList");box.replaceChildren();
+ const names=zodiacNames[$("language").value]||zodiacNames.en;
+ signs.forEach((z,i)=>{
+  const row=document.createElement("div");row.className="history-row";
+  const title=document.createElement("strong");title.textContent=z[0]+"  "+names[i];
+  const date=document.createElement("small");date.textContent=z[2];
+  const num=document.createElement("span");num.style.float="right";num.textContent=formatNumber(i+1);
+  row.append(title,num,date);
+  row.addEventListener("click",()=>{expression+=String(i+1);update();closeModal("zodiacModal")});
+  box.append(row);
+ });
+}
+const oldApplyLanguage=applyLanguage;
+applyLanguage=function(){oldApplyLanguage();renderZodiac()};
+
+document.addEventListener("keydown",e=>{
+ if(document.querySelector(".modal.show"))return;
+ if(/^[0-9.]$/.test(e.key))add(e.key);
+ else if(["+","-","*","/","%","(",")","^"].includes(e.key))add(e.key);
+ else if(e.key==="Enter"||e.key==="="){e.preventDefault();equals()}
+ else if(e.key==="Backspace")back();
+ else if(e.key==="Escape")clear();
+});
+
+$("language").value=load("rgbcalc_language","id");
+$("digits").value=load("rgbcalc_digits","latn");
+setTheme(load("rgbcalc_theme","rgb"));
+applyLanguage();update();
+})();
+</script>
+</body>
+</html>

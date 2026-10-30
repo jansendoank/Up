@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ensiklopedia Pramuka</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: satu kolom 960px; tiap bagian bernomor dengan pola sama: judul, pembuka singkat, isi dalam kartu atau daftar. */
+:root {
+  --bg: #f5ead8;
+  --dot: rgba(201, 170, 130, 0.25);
+  --ink: #4d3525;
+  --heading: #805735;
+  --heading-2: #906541;
+  --paper: #fffaf1;
+  --card: #f5e7d1;
+  --line: #e0c29c;
+  --dash: #d8b991;
+  --brown: #805735;
+  --brown-dark: #513824;
+  --sand: #dfc29b;
+  --muted: #7a624a;
+  --field: #fffdf8;
+  --field-line: #c9aa83;
+  --nav-text: #f9e9d0;
+  --header-text: #fff4df;
+  --red: #b8362b;
+  --white: #fffaf1;
+  --flag-yellow: #e8b832;
+  --uni: #8a5a35;
+  --pants: #5c3d27;
+  --hat: #4d3525;
+  --skin: #d9a679;
+  --wood: #c49a62;
+  --font: Georgia, "Times New Roman", serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  background: radial-gradient(var(--dot) 1px, transparent 1px) 0 0 / 18px 18px var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--brown-dark); z-index: 10; }
+
+/* Header, menu, footer */
+header {
+  background: linear-gradient(135deg, #543923, #9b7048);
+  color: var(--header-text);
+  text-align: center;
+  padding-block: 36px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+  border-bottom: 6px solid #d7b88d;
+}
+header h1 { font-size: clamp(1.7rem, 5vw, 2.6rem); margin: 8px 0; line-height: 1.2; text-wrap: balance; }
+header p { margin: 6px 0 12px; }
+.fleur { font-size: 2.6rem; line-height: 1.2; }
+.badge { display: inline-block; background: var(--sand); color: #563b25; padding: 4px 12px; border-radius: 20px; margin: 3px; font-size: 0.82rem; line-height: 1.6; }
+nav {
+  background: var(--brown-dark);
+  padding-block: 8px;
+  padding-left: max(14px, env(safe-area-inset-left, 0px));
+  padding-right: max(14px, env(safe-area-inset-right, 0px));
+  display: flex; gap: 2px 18px; justify-content: center; flex-wrap: wrap;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  box-shadow: 0 3px 10px rgba(73, 53, 34, 0.19);
+}
+nav a { color: var(--nav-text); text-decoration: none; font-size: 0.88rem; line-height: 1.6; padding: 6px 2px; white-space: nowrap; }
+nav a:hover { color: #e7c18f; text-decoration: underline; }
+@media (max-width: 700px) {
+  nav { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: thin; }
+}
+footer {
+  background: var(--brown-dark); color: #fff0d8; text-align: center;
+  padding-block: 28px; border-top: 6px solid #d7b88d;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+footer h3 { color: #fff0d8; margin: 0 0 4px; font-size: 1.15rem; }
+footer p { margin: 4px 0; }
+footer .small { color: #e9d6b8; }
+footer a { color: #f3d9ad; }
+
+/* Halaman dan bagian */
+main {
+  max-width: 960px; margin: 0 auto; padding-block: 20px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+.hero { background: linear-gradient(135deg, #ead6b8, #f8eddb); border: 2px dashed #bc9469; border-radius: 16px; padding: 24px; text-align: center; }
+.hero h2 { margin: 0 0 8px; font-size: 1.5rem; }
+.hero p { margin: 0 auto; max-width: 64ch; }
+section {
+  background: var(--paper); padding: 28px; margin: 24px 0;
+  border: 1px solid #e1c8a6; border-radius: 16px; box-shadow: 0 5px 15px rgba(104, 69, 45, 0.082);
+  scroll-margin-top: 64px; min-width: 0;
+  display: flex; flex-direction: column; gap: 16px;
+}
+section > * { margin: 0; min-width: 0; }
+section > h3 { margin-top: 8px; }
+section > p, .lead { max-width: 68ch; }
+h2 {
+  color: var(--heading); font-size: clamp(1.3rem, 3.6vw, 1.65rem); line-height: 1.3; text-wrap: balance;
+  border-bottom: 2px dashed var(--dash); padding-bottom: 10px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero h2 { display: block; border: 0; padding: 0; }
+.no { flex: none; width: 2.1rem; height: 2.1rem; border-radius: 50%; background: var(--brown); color: #fff8eb; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+h3 { color: var(--heading-2); font-size: 1.12rem; line-height: 1.4; }
+.small { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+a { color: var(--heading); }
+label, .lab { display: block; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
+
+/* Kartu dan grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+.grid.wide { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.card { background: var(--card); padding: 18px; border-radius: 12px; border: 1px solid var(--line); min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.card > * { margin: 0; }
+.card h3 { font-size: 1.1rem; }
+.tag { align-self: flex-start; background: var(--paper); border: 1px solid var(--line); color: var(--heading); font-size: 0.8rem; padding: 1px 10px; border-radius: 20px; line-height: 1.6; }
+.example { margin-top: auto !important; background: var(--paper); border: 1px dashed var(--dash); border-radius: 8px; padding: 8px 10px; font-family: var(--mono); font-size: 0.85rem; line-height: 1.6; }
+.example .lab { margin-bottom: 2px; font-family: var(--font); }
+.example b { color: var(--red); }
+.morse-svg { display: block; width: 100%; height: auto; }
+.card a.more { font-size: 0.9rem; margin-top: auto; }
+
+/* Garis waktu */
+.timeline { list-style: none; padding: 0; display: flex; flex-direction: column; }
+.timeline li { display: grid; grid-template-columns: 8rem 1fr; gap: 6px 18px; padding: 16px 0; border-top: 1px dashed var(--dash); }
+.timeline li:first-child { border-top: 0; padding-top: 4px; }
+.timeline li:last-child { padding-bottom: 0; }
+.when { font-weight: 700; font-size: 1.1rem; color: var(--red); line-height: 1.4; }
+.what > * { margin: 0; }
+.what p { margin-top: 4px; max-width: 64ch; }
+@media (max-width: 600px) { .timeline li { grid-template-columns: 1fr; } }
+
+/* Daftar */
+ul, ol { padding-left: 1.4rem; }
+.card ul, .card ol { margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.cols { column-gap: 32px; }
+@media (min-width: 700px) { .cols { columns: 2; display: block !important; } .cols li { break-inside: avoid; margin-bottom: 4px; } }
+.plain { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
+.plain li { padding: 10px 0; border-bottom: 1px dashed var(--dash); }
+
+/* Formulir dan tombol */
+button {
+  background: var(--brown); color: #fff8eb; border: 0; padding: 10px 18px; border-radius: 9px;
+  cursor: pointer; margin: 0; font: inherit; font-size: 0.9rem; line-height: 1.4;
+}
+button:hover { background: var(--brown-dark); }
+button.ghost { background: var(--sand); color: #563b25; }
+button.ghost:hover { background: #cfae83; }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
+input[type="text"], textarea, select {
+  width: 100%; padding: 12px; border: 1px solid var(--field-line); border-radius: 9px; margin: 0;
+  font: inherit; font-size: 1rem; background: var(--field); color: var(--ink);
+}
+textarea { resize: vertical; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--brown-dark); color: #fff0d8; padding: 14px; border-radius: 10px; font-family: var(--mono); font-size: 0.95rem; line-height: 1.6; margin: 0; min-height: 3.4rem; }
+.tool { display: flex; flex-direction: column; gap: 16px; max-width: 640px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.notes { margin: 0; padding-left: 1.2rem; }
+#jawab { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+#jawab:empty { display: none; }
+
+/* Peragaan semaphore */
+.sema-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 760px) { .sema-grid { grid-template-columns: 1.1fr 0.9fr; align-items: start; } }
+.sema-stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; min-width: 0; padding-bottom: 6px; }
+.sema-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 14px 16px 0; }
+.sema-letter { font-family: var(--font); font-style: italic; font-weight: 700; font-size: 4.8rem; line-height: 0.9; color: var(--red); min-width: 1ch; }
+.sema-read { font-family: var(--mono); font-size: 0.74rem; color: var(--muted); text-align: right; line-height: 1.6; }
+.sema-read b { color: var(--ink); font-weight: 700; }
+#sema-fig { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; }
+.sema-ground { stroke: var(--dash); stroke-width: 2; }
+.sema-dot { fill: var(--dash); }
+.sema-controls { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.sema-controls input[type="text"] { font-family: var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.sema-strip { display: flex; flex-wrap: wrap; gap: 4px; min-height: 2.4rem; }
+.sema-strip span { font-family: var(--mono); font-size: 0.92rem; width: 1.9rem; height: 2.2rem; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 4px; background: var(--paper); color: var(--muted); line-height: 1; }
+.sema-strip span.gap { width: 0.9rem; border-style: dashed; }
+.sema-strip span.done { color: var(--ink); }
+.sema-strip span.now { background: var(--red); border-color: var(--red); color: #fff; font-weight: 700; }
+.sema-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#sema-play { min-width: 7.5rem; background: var(--red); font-weight: 700; padding: 11px 22px; }
+#sema-play:hover { background: #8f2a21; }
+.sema-chip { background: var(--sand); color: #563b25; font-family: var(--mono); font-size: 0.8rem; padding: 6px 10px; }
+.sema-chip:hover { background: #cfae83; color: #3c2a1a; }
+.sema-speed { display: flex; align-items: center; gap: 10px; }
+.sema-speed input { flex: 1; min-width: 0; accent-color: var(--red); }
+.sema-lab { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.sema-chart { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; }
+.sema-cell { display: flex; flex-direction: column; align-items: center; gap: 0; margin: 0; padding: 6px 4px 8px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; }
+.sema-cell:hover { background: #fff3dc; border-color: var(--brown); color: var(--ink); }
+.sema-cell svg { width: 100%; max-width: 70px; height: auto; display: block; }
+.sema-cell span { font-family: var(--mono); font-weight: 700; font-size: 0.95rem; line-height: 1.4; }
+.sema-cell.on { border-color: var(--red); box-shadow: inset 0 0 0 1px var(--red); background: #fff3dc; }
+
+[hidden] { display: none !important; }
+.sema-panel { display: flex; flex-direction: column; gap: 14px; }
+.sema-score { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sema-score div { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; text-align: center; }
+.sema-score .lab { margin: 0; font-size: 0.64rem; letter-spacing: 0.06em; }
+.sema-score b { display: block; font-family: var(--mono); font-size: 1.5rem; color: var(--red); line-height: 1.2; }
+.sema-status { min-height: 2.9em; margin: 0; color: var(--ink); }
+.sema-stage .arm { cursor: grab; touch-action: none; }
+.sema-stage .arm.grab { cursor: grabbing; }
+.sema-stage .arm:hover { filter: brightness(1.06); }
+.sema-letter.pop { animation: sema-pop 0.35s ease; }
+@keyframes sema-pop { 0% { transform: scale(0.7); opacity: 0.3; } 60% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+.sema-stage.shake { animation: sema-shake 0.4s; }
+@keyframes sema-shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+.sema-chart.guess .sema-cell svg { display: none; }
+.sema-chart.guess .sema-cell span { font-size: 1.4rem; padding: 12px 0; }
+@media (prefers-reduced-motion: reduce) { .sema-letter.pop, .sema-stage.shake { animation: none; } }
+@media (max-width: 600px) {
+  header { padding-block: 28px; }
+  main { padding-block: 10px; }
+  section { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<header id="atas">
+  <div class="fleur" aria-hidden="true">⚜</div>
+  <h1>Ensiklopedia Pramuka</h1>
+  <p>Mengenal sejarah, keterampilan, sandi, dan nilai kepramukaan</p>
+  <span class="badge">Satyaku Kudarmakan</span>
+  <span class="badge">Darmaku Kubaktikan</span>
+</header>
+
+<nav aria-label="Navigasi bagian">
+  <a href="#sejarah">Sejarah</a>
+  <a href="#tokoh">Tokoh</a>
+  <a href="#tingkatan">Tingkatan</a>
+  <a href="#sandi">Sandi</a>
+  <a href="#semaphore">Semaphore</a>
+  <a href="#penerjemah">Morse</a>
+  <a href="#kode">Kode Kehormatan</a>
+  <a href="#tali">Tali-temali</a>
+  <a href="#manfaat">Manfaat</a>
+  <a href="#kuis">Kuis</a>
+</nav>
+
+<main>
+  <div class="hero">
+    <h2>Selamat datang, Pramuka!</h2>
+    <p>Pramuka (singkatan dari Praja Muda Karana) adalah gerakan kepanduan di Indonesia yang menyelenggarakan pendidikan kepramukaan bagi anak-anak dan pemuda. Praja Muda Karana berarti "Jiwa Muda yang Suka Berkarya".</p>
+  </div>
+
+  <section id="sejarah">
+    <h2><span class="no">1</span>Sejarah Gerakan Pramuka</h2>
+    <p class="lead">Gerakan kepanduan modern berawal dari Inggris. Di Indonesia, Gerakan Pramuka lahir dari penyatuan berbagai organisasi kepanduan. Berikut urutan peristiwa pentingnya.</p>
+    <ol class="timeline">
+      <li>
+        <div class="when">1907</div>
+        <div class="what"><h3>Perkemahan Brownsea</h3><p>Robert Baden-Powell memimpin perkemahan percobaan di Pulau Brownsea, Inggris, bersama 20 pemuda. Perkemahan ini menguji metode kepanduan lewat kegiatan alam terbuka, latihan P3K, dan pembentukan karakter, lalu menjadi salah satu dasar perkembangan gerakan kepanduan.</p></div>
+      </li>
+      <li>
+        <div class="when">1908</div>
+        <div class="what"><h3>Buku <i>Scouting for Boys</i></h3><p>Baden-Powell menerbitkan buku yang berisi panduan moral, teknik kepanduan, dan kepemimpinan. Buku ini membantu menyebarkan gerakan kepanduan ke berbagai negara dan menjadi landasan utama gerakan pramuka dunia.</p></div>
+      </li>
+      <li>
+        <div class="when">Sebelum kemerdekaan</div>
+        <div class="what"><h3>Organisasi kepanduan di Indonesia</h3><p>Berbagai organisasi kepanduan berkembang di Indonesia sebelum kemerdekaan.</p></div>
+      </li>
+      <li>
+        <div class="when">1961</div>
+        <div class="what"><h3>Gerakan Pramuka dibentuk</h3><p>Presiden Soekarno dan Sri Sultan Hamengkubuwono IX membentuk Gerakan Pramuka Indonesia melalui Keputusan Presiden Nomor 238 Tahun 1961, untuk menyatukan seluruh organisasi kepanduan ke dalam satu wadah nasional.</p></div>
+      </li>
+      <li>
+        <div class="when">14 Agustus 1961</div>
+        <div class="what"><h3>Hari Pramuka</h3><p>Gerakan Pramuka diperkenalkan secara resmi kepada masyarakat. Presiden Soekarno melantik Majelis Pimpinan Nasional (Mapinas), Kwartir Nasional (Kwarnas), dan Kwartir Nasional Harian, serta menganugerahkan Panji Gerakan Pramuka kepada Sri Sultan Hamengkubuwono IX dalam defile besar di Jakarta. Tanggal ini diperingati sebagai Hari Pramuka setiap tahun.</p></div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="tokoh">
+    <h2><span class="no">2</span>Tokoh-tokoh Pramuka</h2>
+    <div class="grid">
+      <div class="card"><h3>Robert Baden-Powell</h3><span class="tag">Pendiri kepanduan modern</span><p>Tokoh pendiri gerakan kepanduan modern yang berasal dari Inggris.</p></div>
+      <div class="card"><h3>Olave Baden-Powell</h3><span class="tag">Kepanduan putri</span><p>Tokoh penting dalam perkembangan kepanduan putri dunia.</p></div>
+      <div class="card"><h3>Sri Sultan Hamengkubuwono IX</h3><span class="tag">Kepramukaan Indonesia</span><p>Tokoh penting kepramukaan Indonesia dan Ketua Kwartir Nasional pertama.</p></div>
+    </div>
+  </section>
+
+  <section id="tingkatan">
+    <h2><span class="no">3</span>Tingkatan dalam Pramuka</h2>
+    <p class="lead">Peserta didik dikelompokkan menjadi empat golongan menurut usia.</p>
+    <div class="grid">
+      <div class="card"><h3>Siaga</h3><span class="tag">7–10 tahun</span></div>
+      <div class="card"><h3>Penggalang</h3><span class="tag">11–15 tahun</span></div>
+      <div class="card"><h3>Penegak</h3><span class="tag">16–20 tahun</span></div>
+      <div class="card"><h3>Pandega</h3><span class="tag">21–25 tahun</span></div>
+    </div>
+    <p class="small">Catatan: rentang usia di atas bersifat umum dan mengacu pada golongan peserta didik dalam Gerakan Pramuka.</p>
+  </section>
+
+  <section id="sandi">
+    <h2><span class="no">4</span>Mengenal Berbagai Sandi Pramuka</h2>
+    <p class="lead">Sandi adalah cara menyampaikan pesan memakai aturan atau simbol tertentu. Dalam kepramukaan, sandi melatih ketelitian, konsentrasi, dan kemampuan memecahkan masalah.</p>
+    <div class="grid wide">
+      <div class="card">
+        <h3>Sandi Morse</h3>
+        <p>Memakai titik (.) dan garis (-) untuk mewakili huruf dan angka.</p>
+        <svg class="morse-svg" viewBox="0 0 320 80" role="img" aria-label="Contoh visual sandi Morse untuk huruf A, B, dan S">
+          <g font-size="14" text-anchor="middle" font-family="Georgia, serif" fill="#805735" font-weight="700">
+            <text x="52" y="20">A</text>
+            <text x="160" y="20">B</text>
+            <text x="268" y="20">S</text>
+          </g>
+          <g fill="#805735">
+            <circle cx="35" cy="52" r="7"/>
+            <rect x="47" y="45" width="39" height="14" rx="7"/>
+            <rect x="135" y="45" width="39" height="14" rx="7"/>
+            <circle cx="183" cy="52" r="7"/>
+            <circle cx="200" cy="52" r="7"/>
+            <circle cx="217" cy="52" r="7"/>
+            <circle cx="250" cy="52" r="7"/>
+            <circle cx="267" cy="52" r="7"/>
+            <circle cx="284" cy="52" r="7"/>
+          </g>
+        </svg>
+        <div class="example"><div class="lab">Contoh</div>SOS = <b>... --- ...</b></div>
+      </div>
+      <div class="card">
+        <h3>Sandi Semaphore</h3>
+        <p>Memakai dua bendera yang diposisikan dengan tangan untuk menyampaikan pesan dari jarak jauh.</p>
+        <a class="more" href="#semaphore">Lihat peragaan dan tabel huruf</a>
+      </div>
+      <div class="card">
+        <h3>Sandi Kotak</h3>
+        <p>Memakai bentuk garis, sudut, dan terkadang titik sebagai simbol huruf. Untuk menerjemahkannya, pembaca harus mengetahui kunci atau tabel sandi yang digunakan.</p>
+      </div>
+      <div class="card">
+        <h3>Sandi Angka</h3>
+        <p>Mengganti huruf dengan nomor urut alfabet: A = 1, B = 2, C = 3, sampai Z = 26.</p>
+        <div class="example"><div class="lab">Contoh</div>PRAMUKA = <b>16-18-1-13-21-11-1</b></div>
+      </div>
+      <div class="card">
+        <h3>Sandi Alfabet Terbalik</h3>
+        <p>Menukar urutan huruf dari depan ke belakang alfabet: A menjadi Z, B menjadi Y, C menjadi X, dan seterusnya.</p>
+        <div class="example"><div class="lab">Contoh</div>PRAMUKA = <b>KIZNFPZ</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="semaphore">
+    <h2><span class="no">5</span>Sandi Semaphore</h2>
+    <p class="lead">Semaphore adalah metode komunikasi visual yang memakai dua bendera. Setiap posisi bendera melambangkan huruf atau isyarat tertentu, sehingga pesan dapat dikirim dari jarak jauh tanpa suara.</p>
+    <div class="grid wide">
+      <div class="card">
+        <h3>Fungsi</h3>
+        <ul>
+          <li>Menyampaikan pesan tanpa berbicara</li>
+          <li>Melatih konsentrasi dan ketelitian</li>
+          <li>Mengembangkan keterampilan komunikasi dalam kegiatan pramuka</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Cara menggunakan</h3>
+        <ol>
+          <li>Pegang satu bendera di setiap tangan.</li>
+          <li>Atur posisi kedua tangan sesuai huruf yang ingin disampaikan.</li>
+          <li>Pastikan posisi bendera terlihat jelas oleh penerima.</li>
+          <li>Penerima membaca setiap posisi dan menyusunnya menjadi pesan.</li>
+        </ol>
+      </div>
+    </div>
+
+    <h3>Peragaan</h3>
+    <p class="small">Tekan Mainkan untuk memperagakan pesan, seret lengan penyandi untuk menyusun huruf sendiri, atau ketik huruf di keyboard. Mau menguji diri? Coba mode tebak huruf. Posisi tampak dari depan penyandi.</p>
+    <div class="sema-grid">
+      <div class="sema-stage">
+        <div class="sema-head">
+          <div class="sema-letter" id="sema-letter" aria-live="polite">H</div>
+          <div class="sema-read">sudut dari posisi turun, searah jarum jam<br>kiri <b id="sema-angL">0°</b> · kanan <b id="sema-angR">0°</b></div>
+        </div>
+        <svg id="sema-fig" viewBox="0 0 560 520" role="img" aria-label="Pramuka memegang dua bendera semaphore. Kedua lengan bisa diseret."></svg>
+      </div>
+      <div class="sema-controls">
+        <div class="sema-panel" id="sema-play-panel">
+          <div>
+            <label for="sema-msg">Pesan</label>
+            <input type="text" id="sema-msg" value="HALO PRAMUKA" maxlength="60" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="sema-strip" id="sema-strip" aria-hidden="true"></div>
+          <div class="sema-row">
+            <button type="button" id="sema-play">Mainkan</button>
+            <button type="button" class="sema-chip" data-msg="SOS">SOS</button>
+            <button type="button" class="sema-chip" data-msg="HALO PRAMUKA">HALO PRAMUKA</button>
+            <button type="button" class="sema-chip" data-msg="SIAGA">SIAGA</button>
+          </div>
+          <div>
+            <label for="sema-speed">Kecepatan</label>
+            <div class="sema-speed">
+              <span class="sema-lab">Pelan</span>
+              <input type="range" id="sema-speed" min="1" max="5" step="1" value="3">
+              <span class="sema-lab">Cepat</span>
+            </div>
+          </div>
+        </div>
+        <div class="sema-panel" id="sema-guess-panel" hidden>
+          <div class="sema-score">
+            <div><span class="lab">Benar</span><b id="sema-score">0</b></div>
+            <div><span class="lab">Percobaan</span><b id="sema-tries">0</b></div>
+            <div><span class="lab">Beruntun</span><b id="sema-streak">0</b></div>
+          </div>
+          <div class="sema-row"><button type="button" class="ghost" id="sema-skip">Ganti huruf</button></div>
+        </div>
+        <div class="sema-row"><button type="button" class="ghost" id="sema-guess-btn">Mode tebak huruf</button></div>
+        <p class="small sema-status" id="sema-status" aria-live="polite">Seret lengan penyandi untuk menyusun huruf sendiri.</p>
+        <p class="small" style="margin:0">Hanya huruf A sampai Z dan spasi yang dibaca. Angka dan tanda baca dilewati.</p>
+      </div>
+    </div>
+
+    <h3>Tabel huruf A–Z</h3>
+    <div class="sema-chart" id="sema-chart"></div>
+  </section>
+
+  <section id="penerjemah">
+    <h2><span class="no">6</span>Penerjemah Sandi Morse</h2>
+    <p class="lead">Ubah teks biasa menjadi Morse, atau terjemahkan kode Morse kembali menjadi teks.</p>
+    <div class="tool">
+      <div>
+        <label for="mode">1. Pilih arah terjemahan</label>
+        <select id="mode">
+          <option value="encode">Teks → sandi Morse</option>
+          <option value="decode">Sandi Morse → teks</option>
+        </select>
+      </div>
+      <div>
+        <label for="pesan">2. Tulis pesan</label>
+        <textarea id="pesan" rows="3" placeholder="Contoh: HALO PRAMUKA atau .... .- .-.. ---"></textarea>
+      </div>
+      <div class="actions">
+        <button type="button" id="btn-terjemah">Terjemahkan</button>
+        <button type="button" class="ghost" id="btn-hapus">Hapus</button>
+      </div>
+      <div>
+        <span class="lab">3. Hasil terjemahan</span>
+        <pre id="hasil">Hasil akan muncul di sini...</pre>
+      </div>
+      <div class="actions"><button type="button" class="ghost" id="btn-salin">Salin hasil</button></div>
+    </div>
+    <ul class="notes small">
+      <li>Saat memasukkan Morse, pisahkan huruf dengan spasi.</li>
+      <li>Pisahkan kata dengan tanda /.</li>
+    </ul>
+  </section>
+
+  <section id="kode">
+    <h2><span class="no">7</span>Kode Kehormatan Pramuka</h2>
+    <div class="card">
+      <h3>Tri Satya</h3>
+      <p>Janji yang menjadi pedoman anggota Pramuka untuk menjalankan kewajiban kepada Tuhan, negara, dan sesama, serta menepati Dasa Darma.</p>
+      <ol>
+        <li>Menjalankan kewajiban terhadap Tuhan Yang Maha Esa, Negara Kesatuan Republik Indonesia, dan mengamalkan Pancasila.</li>
+        <li>Menolong sesama hidup dan ikut serta membangun masyarakat.</li>
+        <li>Menepati Dasa Darma.</li>
+      </ol>
+      <p class="small">Rumusan janji disesuaikan dengan golongan peserta didik.</p>
+    </div>
+    <div class="card">
+      <h3>Dasa Darma</h3>
+      <p>Sepuluh sikap yang menjadi pedoman perilaku anggota Pramuka.</p>
+      <ol class="cols">
+        <li>Takwa kepada Tuhan Yang Maha Esa.</li>
+        <li>Cinta alam dan kasih sayang sesama manusia.</li>
+        <li>Patriot yang sopan dan kesatria.</li>
+        <li>Patuh dan suka bermusyawarah.</li>
+        <li>Rela menolong dan tabah.</li>
+        <li>Rajin, terampil, dan gembira.</li>
+        <li>Hemat, cermat, dan bersahaja.</li>
+        <li>Disiplin, berani, dan setia.</li>
+        <li>Bertanggung jawab dan dapat dipercaya.</li>
+        <li>Suci dalam pikiran, perkataan, dan perbuatan.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Dwi Satya dan Dwi Darma</h3>
+      <p>Dwi Satya adalah janji bagi Pramuka Siaga. Dwi Darma adalah ketentuan moral yang menjadi pedoman perilakunya.</p>
+    </div>
+  </section>
+
+  <section id="tali">
+    <h2><span class="no">8</span>Tali-temali dan Pioneering</h2>
+    <p class="lead">Tali-temali adalah keterampilan menggunakan tali untuk membuat simpul, ikatan, dan berbagai bentuk konstruksi. Pioneering adalah kegiatan membuat konstruksi dari tongkat dan tali.</p>
+    <div class="grid">
+      <div class="card"><h3>Simpul hidup</h3><p>Mudah dikencangkan dan dilepaskan. Digunakan sesuai kebutuhan ikatan yang tidak permanen.</p></div>
+      <div class="card"><h3>Simpul mati</h3><p>Untuk menyambung dua ujung tali berukuran sama dalam kondisi yang sesuai.</p></div>
+      <div class="card"><h3>Simpul pangkal</h3><p>Digunakan sebagai ikatan awal pada tongkat atau tiang.</p></div>
+      <div class="card"><h3>Ikatan palang</h3><p>Digunakan untuk menyatukan dua tongkat yang bersilangan tegak lurus.</p></div>
+    </div>
+  </section>
+
+  <section id="manfaat">
+    <h2><span class="no">9</span>Manfaat Mengikuti Pramuka</h2>
+    <ul class="plain">
+      <li>Melatih kedisiplinan dan tanggung jawab.</li>
+      <li>Meningkatkan kemandirian dan kepercayaan diri.</li>
+      <li>Melatih kerja sama dan kepemimpinan.</li>
+      <li>Mengenal alam serta menjaga lingkungan.</li>
+      <li>Mengembangkan keterampilan memecahkan masalah.</li>
+      <li>Menumbuhkan kepedulian terhadap sesama.</li>
+    </ul>
+  </section>
+
+  <section id="kuis">
+    <h2><span class="no">10</span>Kuis Mini Pramuka</h2>
+    <p>Siapa tokoh yang dikenal sebagai pendiri gerakan kepanduan modern?</p>
+    <div class="actions"><button type="button" id="btn-jawab">Lihat jawaban</button></div>
+    <p id="jawab" aria-live="polite"></p>
+  </section>
+</main>
+
+<footer>
+  <h3>Ensiklopedia Pramuka</h3>
+  <p>Belajar, berkarya, mengabdi</p>
+  <p class="small">Jadilah Pramuka yang berkarakter, terampil, dan peduli sesama.</p>
+  <p class="small"><a href="#atas">Kembali ke atas</a></p>
+</footer>
+
+<script>
+/* ---------- Semaphore ---------- */
+(function () {
+  // Posisi lengan: 0 turun, lalu tiap 45° searah jarum jam di layar (1 kiri-bawah, 2 kiri, 3 kiri-atas, 4 atas, 5 kanan-atas, 6 kanan, 7 kanan-bawah).
+  var POS = {
+    A:[0,1],B:[0,2],C:[0,3],D:[0,4],E:[0,5],F:[0,6],G:[0,7],
+    H:[1,2],I:[1,3],K:[1,4],L:[1,5],M:[1,6],N:[1,7],
+    O:[2,3],P:[2,4],Q:[2,5],R:[2,6],S:[2,7],
+    T:[3,4],U:[3,5],Y:[3,6],
+    J:[4,6],V:[4,7],
+    W:[5,6],X:[5,7],
+    Z:[6,7]
+  };
+  var PAIR = {};
+  Object.keys(POS).forEach(function (k) {
+    var p = POS[k].slice().sort(function (a, b) { return a - b; });
+    PAIR[p[0] + ',' + p[1]] = k;
+  });
+  PAIR['0,0'] = ' ';
+
+  var SY = 222, SX = [232, 328], SIDE = [-1, 1];
+
+  function assign(p) {
+    var a = p[0], b = p[1];
+    function cost(l, r) { return (l >= 5 ? 1 : 0) + (r >= 1 && r <= 3 ? 1 : 0); }
+    return cost(a, b) <= cost(b, a) ? [a * 45, b * 45] : [b * 45, a * 45];
+  }
+  function anglesFor(ch) { return (ch === ' ' || !POS[ch]) ? [0, 0] : assign(POS[ch]); }
+  function shortest(from, to) { return ((to - from + 540) % 360) - 180; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+  /* ----- Gambar karakter (vektor, tajam di ukuran berapa pun) ----- */
+  function defs() {
+    return '<defs>' +
+      '<linearGradient id="gUni" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6e4526"/><stop offset=".45" stop-color="#a06a3e"/><stop offset="1" stop-color="#6a4224"/></linearGradient>' +
+      '<linearGradient id="gUniV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a56d40"/><stop offset="1" stop-color="#7b4f2d"/></linearGradient>' +
+      '<linearGradient id="gPants" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#47301e"/><stop offset=".5" stop-color="#6b4730"/><stop offset="1" stop-color="#45301f"/></linearGradient>' +
+      '<linearGradient id="gSkin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ebbd92"/><stop offset="1" stop-color="#cf9468"/></linearGradient>' +
+      '<linearGradient id="gWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e3bd80"/><stop offset="1" stop-color="#b78b50"/></linearGradient>' +
+      '<linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e04d40"/><stop offset="1" stop-color="#a62a20"/></linearGradient>' +
+      '<linearGradient id="gYel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8d052"/><stop offset="1" stop-color="#dba51f"/></linearGradient>' +
+      '<radialGradient id="gShadow"><stop offset="0" stop-color="#3c230f" stop-opacity=".38"/><stop offset="1" stop-color="#3c230f" stop-opacity="0"/></radialGradient>' +
+      '</defs>';
+  }
+
+  function stations() {
+    var out = '';
+    for (var p = 0; p < 8; p++) {
+      var a = p * 45 * Math.PI / 180;
+      SX.forEach(function (sx) {
+        out += '<circle class="sema-dot" cx="' + (sx - 214 * Math.sin(a)).toFixed(1) + '" cy="' + (SY + 214 * Math.cos(a)).toFixed(1) + '" r="4"/>';
+      });
+    }
+    return out;
+  }
+
+  function bodyMarkup() {
+    return '<ellipse cx="280" cy="510" rx="125" ry="11" fill="url(#gShadow)"/>' +
+      '<line class="sema-ground" x1="30" y1="510" x2="530" y2="510"/>' +
+      // kaki dan sepatu
+      '<path d="M238 340 H279 L275 492 H241Z" fill="url(#gPants)"/>' +
+      '<path d="M322 340 H281 L285 492 H319Z" fill="url(#gPants)"/>' +
+      '<path d="M259 362 V486 M301 362 V486" stroke="rgba(0,0,0,.2)" stroke-width="1.5"/>' +
+      '<path d="M228 486 H278 Q284 486 284 494 V504 Q284 510 278 510 H234 Q226 510 226 502 Q226 490 228 486Z" fill="#2f1d12"/>' +
+      '<path d="M332 486 H282 Q276 486 276 494 V504 Q276 510 282 510 H326 Q334 510 334 502 Q334 490 332 486Z" fill="#2f1d12"/>' +
+      '<path d="M234 496 H266 M294 496 H326" stroke="rgba(255,255,255,.18)" stroke-width="2" stroke-linecap="round"/>' +
+      // ikat pinggang
+      '<rect x="217" y="328" width="126" height="18" rx="3" fill="#2f1d12"/>' +
+      '<rect x="269" y="331" width="22" height="12" rx="2" fill="none" stroke="#d8b25a" stroke-width="3"/>' +
+      // baju
+      '<path d="M212 238 Q212 198 252 192 H308 Q348 198 348 238 L344 338 Q280 350 216 338Z" fill="url(#gUniV)"/>' +
+      '<path d="M280 240 V332" stroke="#5e3b21" stroke-width="2"/>' +
+      '<g fill="#d8b25a"><circle cx="280" cy="268" r="2.6"/><circle cx="280" cy="294" r="2.6"/><circle cx="280" cy="318" r="2.6"/></g>' +
+      '<g fill="#935e36" stroke="#5e3b21" stroke-width="1.6"><rect x="228" y="262" width="38" height="36" rx="4"/><rect x="294" y="262" width="38" height="36" rx="4"/></g>' +
+      '<g fill="#a46c40" stroke="#5e3b21" stroke-width="1.6"><path d="M228 262 H266 V277 L247 284 L228 277Z"/><path d="M294 262 H332 V277 L313 284 L294 277Z"/></g>' +
+      '<g fill="#d8b25a"><circle cx="247" cy="276" r="2.4"/><circle cx="313" cy="276" r="2.4"/></g>' +
+      // leher, kerah, kacu
+      '<rect x="265" y="150" width="30" height="48" rx="10" fill="#c98f63"/>' +
+      '<g fill="#a46c40" stroke="#5e3b21" stroke-width="1.6"><path d="M250 194 L280 238 L266 186Z"/><path d="M310 194 L280 238 L294 186Z"/></g>' +
+      '<path d="M254 196 L280 196 L280 248Z" fill="#c33a2e"/>' +
+      '<path d="M280 196 L306 196 L280 248Z" fill="#fffaf1" stroke="#d8b991" stroke-width="1.2"/>' +
+      '<circle cx="280" cy="212" r="6.5" fill="#c9a24b" stroke="#8a6a2a" stroke-width="1.5"/>';
+  }
+
+  function headMarkup() {
+    return '<g id="sema-head">' +
+      '<ellipse cx="244" cy="126" rx="6" ry="9" fill="#d4996c"/><ellipse cx="316" cy="126" rx="6" ry="9" fill="#d4996c"/>' +
+      '<ellipse cx="280" cy="122" rx="35" ry="40" fill="url(#gSkin)"/>' +
+      '<path d="M246 112 Q246 96 262 92 L262 110Z" fill="#2a1a10"/><path d="M314 112 Q314 96 298 92 L298 110Z" fill="#2a1a10"/>' +
+      '<path d="M259 108 Q267 103 275 107 M285 107 Q293 103 301 108" stroke="#2a1a10" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<ellipse id="eyeL" cx="267" cy="121" rx="8" ry="7" fill="#fffdf8"/><ellipse id="eyeR" cx="293" cy="121" rx="8" ry="7" fill="#fffdf8"/>' +
+      '<ellipse id="pupL" cx="267" cy="121" rx="4" ry="4" fill="#2a1a10"/><ellipse id="pupR" cx="293" cy="121" rx="4" ry="4" fill="#2a1a10"/>' +
+      '<path d="M280 126 Q277 134 282 135" stroke="#b9805a" fill="none" stroke-width="2" stroke-linecap="round"/>' +
+      '<g fill="rgba(215,95,75,.22)"><circle cx="257" cy="138" r="6"/><circle cx="303" cy="138" r="6"/></g>' +
+      '<path id="mouth" d="M268 143 Q280 151 292 143" stroke="#7a2f2a" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+      '<path d="M242 104 Q244 66 280 64 Q316 66 318 104 Q280 96 242 104Z" fill="#5a3a22"/>' +
+      '<path d="M236 104 Q280 92 324 104 Q324 113 316 113 Q280 105 244 113 Q236 113 236 104Z" fill="#43291a"/>' +
+      '<circle cx="280" cy="85" r="8" fill="#d8b25a" stroke="#8a6a2a" stroke-width="1.5"/><circle cx="280" cy="85" r="3.2" fill="#8a6a2a"/>' +
+      '</g>';
+  }
+
+  function armMarkup(i) {
+    var s = SIDE[i];
+    return '<g class="arm" data-i="' + i + '" transform="translate(' + SX[i] + ' ' + SY + ')">' +
+      '<line x1="0" y1="20" x2="0" y2="214" stroke="rgba(0,0,0,.001)" stroke-width="66" stroke-linecap="round" pointer-events="all"/>' +
+      '<rect x="-3.5" y="70" width="7" height="144" rx="3.5" fill="url(#gWood)"/>' +
+      '<path class="fr" fill="url(#gRed)" stroke="rgba(70,30,10,.4)" stroke-width="1"/>' +
+      '<path class="fy" fill="url(#gYel)" stroke="rgba(70,30,10,.4)" stroke-width="1"/>' +
+      '<rect x="-15" y="-6" width="30" height="86" rx="15" fill="url(#gUni)"/>' +
+      '<rect x="-16" y="68" width="32" height="12" rx="5" fill="#5e3b21"/>' +
+      '<circle r="17" fill="url(#gUni)"/>' +
+      '<ellipse cx="0" cy="96" rx="13" ry="16" fill="url(#gSkin)"/>' +
+      '<path d="M-10 90 H10 M-11 97 H11 M-10 104 H10" stroke="#b9805a" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<ellipse cx="' + (-s * 9) + '" cy="86" rx="4.5" ry="8" fill="url(#gSkin)" transform="rotate(' + (s * 20) + ' ' + (-s * 9) + ' 86)"/>' +
+      '</g>';
+  }
+
+  // Bendera kain: tepi bebas bergelombang dan tertinggal saat lengan bergerak.
+  function flagD(s, lag, amp, ph) {
+    var w = 76, h = 76, y0 = 126, hx = 3.5 * s, sn = Math.sin;
+    function X(v, l) { return (hx + s * v + l).toFixed(1); }
+    function Y(v) { return v.toFixed(1); }
+    var Ax = X(0, 0), Ay = Y(y0), Dx = X(0, 0), Dy = Y(y0 + h);
+    var Bx = X(w, lag), By = Y(y0 + amp * 0.35 * sn(ph + 1));
+    var Cx = X(w, lag * 0.9), Cy = Y(y0 + h + amp * 0.35 * sn(ph + 2.4));
+    var abx = X(w / 2, lag * 0.5), aby = Y(y0 + amp * sn(ph));
+    var bcx = X(w + amp * 0.5 * sn(ph + 1.2), lag), bcy = Y(y0 + h / 2);
+    var cdx = X(w / 2, lag * 0.5), cdy = Y(y0 + h + amp * sn(ph + 2));
+    var bdx = X(w / 2, lag * 0.4), bdy = Y(y0 + h / 2 + amp * 0.5 * sn(ph + 0.6));
+    return [
+      'M' + Ax + ' ' + Ay + 'Q' + abx + ' ' + aby + ' ' + Bx + ' ' + By + 'Q' + bdx + ' ' + bdy + ' ' + Dx + ' ' + Dy + 'Z',
+      'M' + Bx + ' ' + By + 'Q' + bcx + ' ' + bcy + ' ' + Cx + ' ' + Cy + 'Q' + cdx + ' ' + cdy + ' ' + Dx + ' ' + Dy + 'Q' + bdx + ' ' + bdy + ' ' + Bx + ' ' + By + 'Z'
+    ];
+  }
+
+  // Figur kecil datar untuk tabel A-Z.
+  function mini(angs) {
+    function a(i) {
+      var s = SIDE[i];
+      return '<g transform="translate(' + SX[i] + ' ' + SY + ') rotate(' + angs[i] + ')">' +
+        '<rect x="-3.5" y="70" width="7" height="144" rx="3.5" fill="#c49a62"/>' +
+        '<path d="M' + (s * 3.5) + ' 126 H' + (s * 79.5) + ' L' + (s * 3.5) + ' 202Z" fill="#c33a2e"/>' +
+        '<path d="M' + (s * 79.5) + ' 126 V202 H' + (s * 3.5) + 'Z" fill="#e8b832"/>' +
+        '<rect x="-15" y="-6" width="30" height="86" rx="15" fill="#8a5a35"/>' +
+        '<ellipse cx="0" cy="96" rx="13" ry="16" fill="#d9a679"/></g>';
+    }
+    return '<svg viewBox="0 0 560 520" aria-hidden="true">' +
+      '<rect x="238" y="340" width="40" height="160" rx="12" fill="#5c3d27"/><rect x="282" y="340" width="40" height="160" rx="12" fill="#5c3d27"/>' +
+      '<path d="M212 238 Q212 198 252 192 H308 Q348 198 348 238 L344 338 Q280 350 216 338Z" fill="#8a5a35"/>' +
+      '<path d="M254 196 L280 196 L280 248Z" fill="#c33a2e"/><path d="M280 196 L306 196 L280 248Z" fill="#fffaf1" stroke="#d8b991" stroke-width="3"/>' +
+      '<circle cx="280" cy="120" r="38" fill="#d9a679"/><path d="M240 108 Q243 64 280 62 Q317 64 320 108Z" fill="#4d3525"/>' +
+      a(0) + a(1) + '</svg>';
+  }
+
+  /* ----- Elemen halaman ----- */
+  var stageEl = document.querySelector('.sema-stage');
+  var svg = document.getElementById('sema-fig');
+  var letterEl = document.getElementById('sema-letter');
+  var angL = document.getElementById('sema-angL');
+  var angR = document.getElementById('sema-angR');
+  var msgEl = document.getElementById('sema-msg');
+  var stripEl = document.getElementById('sema-strip');
+  var playBtn = document.getElementById('sema-play');
+  var speedEl = document.getElementById('sema-speed');
+  var chartEl = document.getElementById('sema-chart');
+  var statusEl = document.getElementById('sema-status');
+  var playPanel = document.getElementById('sema-play-panel');
+  var guessPanel = document.getElementById('sema-guess-panel');
+  var guessBtn = document.getElementById('sema-guess-btn');
+  var skipBtn = document.getElementById('sema-skip');
+
+  svg.innerHTML = defs() + '<g id="sema-rig">' + stations() + bodyMarkup() + headMarkup() + armMarkup(0) + armMarkup(1) +
+    '<g id="sema-guide" style="display:none;pointer-events:none"><line id="gLine" stroke="#b8362b" stroke-width="2.5" stroke-dasharray="7 7" opacity=".75"/><circle id="gDot" r="10" fill="none" stroke="#b8362b" stroke-width="3.5"/></g></g>';
+
+  var rig = document.getElementById('sema-rig');
+  var head = document.getElementById('sema-head');
+  var eyeL = document.getElementById('eyeL'), eyeR = document.getElementById('eyeR');
+  var pupL = document.getElementById('pupL'), pupR = document.getElementById('pupR');
+  var mouth = document.getElementById('mouth');
+  var guide = document.getElementById('sema-guide');
+  var gLine = document.getElementById('gLine'), gDot = document.getElementById('gDot');
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var arms = [0, 1].map(function (i) {
+    var g = svg.querySelector('.arm[data-i="' + i + '"]');
+    return { ang: 0, vel: 0, target: 0, x: SX[i], g: g, fr: g.querySelector('.fr'), fy: g.querySelector('.fy'), shown: '' };
+  });
+
+  /* ----- Mesin gerak: pegas dengan sedikit pantulan ----- */
+  var speedMap = [0.6, 0.8, 1, 1.4, 2];
+  function timeScale() { return speedMap[(parseInt(speedEl.value, 10) || 3) - 1]; }
+
+  var time = 0, last = 0, running = false, inView = false, playing = false;
+  var drag = null, waiters = [], mouse = { x: 0, y: 0, has: false }, eye = { x: 0, y: 0 };
+  var blinkT = 2, blinkP = 0, moodT = 0, mouthState = '';
+
+  function ensureLoop() {
+    if (running) return;
+    running = true; last = performance.now();
+    requestAnimationFrame(loop);
+  }
+  function resolveWaiters() { var w = waiters; waiters = []; w.forEach(function (r) { r(); }); }
+  function isSettled() {
+    return arms.every(function (m) { return Math.abs(m.target - m.ang) < 1.2 && Math.abs(m.vel) < 14; });
+  }
+  function setTargets(a) {
+    arms.forEach(function (m, i) { m.target = m.ang + shortest(m.ang, a[i]); });
+  }
+  function poseTo(a) {
+    resolveWaiters();
+    setTargets(a);
+    ensureLoop();
+    return new Promise(function (res) { waiters.push(res); });
+  }
+
+  function toSvg(x, y) {
+    var m = svg.getScreenCTM();
+    if (!m) return null;
+    var pt = svg.createSVGPoint(); pt.x = x; pt.y = y;
+    return pt.matrixTransform(m.inverse());
+  }
+
+  function loop(ts) {
+    if (!running) return;
+    var dt = Math.min(0.05, (ts - last) / 1000) || 0.016;
+    last = ts; time += dt;
+    var calm = reduced, ts_ = timeScale();
+
+    arms.forEach(function (m, i) {
+      var d = drag && drag.i === i;
+      var k = calm ? 900 : (d ? 480 : 170), c = calm ? 60 : (d ? 36 : 17);
+      var sc = d ? 1 : ts_;
+      var steps = Math.max(1, Math.ceil(dt * sc * 240)), h = dt * sc / steps;
+      for (var n = 0; n < steps; n++) {
+        var acc = k * (m.target - m.ang) - c * m.vel;
+        m.vel += acc * h; m.ang += m.vel * h;
+      }
+    });
+
+    if (isSettled()) {
+      arms.forEach(function (m) {
+        var turns = Math.round(m.ang / 360);
+        if (turns) { m.ang -= 360 * turns; m.target -= 360 * turns; }
+      });
+      if (waiters.length) resolveWaiters();
+    }
+
+    // Badan bernapas dan kepala sedikit bergoyang
+    rig.setAttribute('transform', 'translate(0 ' + (calm ? 0 : Math.sin(time * 1.7) * 1.4).toFixed(2) + ')');
+    head.setAttribute('transform', 'rotate(' + (calm ? 0 : Math.sin(time * 1.1) * 1.2).toFixed(2) + ' 280 160)');
+
+    arms.forEach(function (m, i) {
+      m.g.setAttribute('transform', 'translate(' + m.x + ' ' + SY + ') rotate(' + m.ang.toFixed(2) + ')');
+      var lag = calm ? 0 : clamp(m.vel * 0.035, -26, 26);
+      var amp = calm ? 0 : 3.5 + Math.min(9, Math.abs(m.vel) * 0.03);
+      var d = flagD(SIDE[i], lag, amp, time * 6 + i * 1.9);
+      m.fr.setAttribute('d', d[0]); m.fy.setAttribute('d', d[1]);
+    });
+    var tl = Math.round(((arms[0].ang % 360) + 360) % 360) % 360 + '°';
+    var tr = Math.round(((arms[1].ang % 360) + 360) % 360) % 360 + '°';
+    if (angL.textContent !== tl) angL.textContent = tl;
+    if (angR.textContent !== tr) angR.textContent = tr;
+
+    // Mata mengikuti kursor, berkedip, dan senyum saat jawaban benar
+    if (mouse.has && inView) {
+      var p = toSvg(mouse.x, mouse.y);
+      if (p) {
+        var dx = (p.x - 280) / 140, dy = (p.y - 122) / 140, len = Math.hypot(dx, dy) || 1, f = Math.min(1, len) / len;
+        eye.tx = dx * f * 3.4; eye.ty = dy * f * 2.8;
+      }
+    }
+    eye.x += ((eye.tx || 0) - eye.x) * 0.12; eye.y += ((eye.ty || 0) - eye.y) * 0.12;
+    blinkT -= dt;
+    if (blinkT < 0 && !calm) { blinkP = 0.16; blinkT = 2.5 + Math.random() * 3; }
+    var bk = 1;
+    if (blinkP > 0) { blinkP -= dt; bk = Math.max(0.08, Math.abs(blinkP - 0.08) / 0.08); }
+    eyeL.setAttribute('ry', (7 * bk).toFixed(2)); eyeR.setAttribute('ry', (7 * bk).toFixed(2));
+    pupL.setAttribute('cx', (267 + eye.x).toFixed(2)); pupL.setAttribute('cy', (121 + eye.y).toFixed(2)); pupL.setAttribute('ry', (4 * bk).toFixed(2));
+    pupR.setAttribute('cx', (293 + eye.x).toFixed(2)); pupR.setAttribute('cy', (121 + eye.y).toFixed(2)); pupR.setAttribute('ry', (4 * bk).toFixed(2));
+    if (moodT > 0) moodT -= dt;
+    var ms = moodT > 0 ? 'happy' : 'calm';
+    if (ms !== mouthState) {
+      mouthState = ms;
+      if (ms === 'happy') { mouth.setAttribute('d', 'M265 141 Q280 164 295 141Z'); mouth.setAttribute('fill', '#7a2f2a'); }
+      else { mouth.setAttribute('d', 'M268 143 Q280 151 292 143'); mouth.setAttribute('fill', 'none'); }
+    }
+
+    if (inView || playing || waiters.length || drag || moodT > 0) requestAnimationFrame(loop);
+    else running = false;
+  }
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      inView = es[0].isIntersecting;
+      if (inView) ensureLoop();
+    }, { threshold: 0.05 }).observe(stageEl);
+  } else { inView = true; }
+  window.addEventListener('pointermove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; mouse.has = true; }, { passive: true });
+
+  /* ----- Tampilan huruf, strip pesan, tabel ----- */
+  function say(t) { statusEl.textContent = t; }
+  function showLetter(ch) {
+    letterEl.textContent = ch === ' ' ? '␣' : (ch || '?');
+    letterEl.classList.remove('pop'); void letterEl.offsetWidth; letterEl.classList.add('pop');
+  }
+  function sequence() {
+    return msgEl.value.toUpperCase().split('').filter(function (c) { return c === ' ' || (c >= 'A' && c <= 'Z'); });
+  }
+  function buildStrip(activeIdx) {
+    var seq = sequence();
+    stripEl.innerHTML = '';
+    seq.forEach(function (c, i) {
+      var s = document.createElement('span');
+      s.textContent = c === ' ' ? '' : c;
+      var cls = c === ' ' ? 'gap' : '';
+      if (activeIdx !== undefined && activeIdx >= 0) {
+        if (i < activeIdx) cls += ' done';
+        if (i === activeIdx) cls += ' now';
+      }
+      s.className = cls;
+      stripEl.appendChild(s);
+    });
+  }
+  function markChart(ch) {
+    var cells = chartEl.querySelectorAll('.sema-cell');
+    for (var i = 0; i < cells.length; i++) cells[i].classList.toggle('on', cells[i].getAttribute('data-ch') === ch);
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  /* ----- Pemutaran pesan ----- */
+  var token = 0;
+  function setPlaying(v) { playing = v; playBtn.textContent = v ? 'Jeda' : 'Mainkan'; if (v) ensureLoop(); }
+  function stopPlay() { token++; setPlaying(false); resolveWaiters(); }
+
+  async function play() {
+    if (playing) { stopPlay(); buildStrip(-1); say('Dijeda.'); return; }
+    var seq = sequence();
+    if (!seq.length) { say('Tulis pesan dulu, lalu tekan Mainkan.'); return; }
+    var my = ++token;
+    setPlaying(true);
+    for (var i = 0; i < seq.length; i++) {
+      if (token !== my) return;
+      buildStrip(i); showLetter(seq[i]); markChart(seq[i]);
+      say(seq[i] === ' ' ? 'Spasi: kedua lengan turun.' : 'Huruf ' + seq[i] + ' (' + (i + 1) + ' dari ' + seq.length + ')');
+      await poseTo(anglesFor(seq[i]));
+      if (token !== my) return;
+      await sleep((seq[i] === ' ' ? 350 : 700) / timeScale());
+    }
+    if (token !== my) return;
+    buildStrip(-1); markChart(null);
+    await poseTo([0, 0]);
+    if (token === my) { setPlaying(false); say('Selesai. Tekan Mainkan untuk mengulang.'); }
+  }
+
+  /* ----- Tabel A-Z ----- */
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function (ch) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'sema-cell';
+    b.setAttribute('data-ch', ch); b.setAttribute('aria-label', 'Huruf ' + ch);
+    b.innerHTML = mini(anglesFor(ch)) + '<span>' + ch + '</span>';
+    b.addEventListener('click', function () {
+      if (guess.on) { answer(ch); return; }
+      stopPlay(); buildStrip(-1); showLetter(ch); markChart(ch);
+      say('Huruf ' + ch + '. Seret lengan untuk mencoba posisi lain.');
+      poseTo(anglesFor(ch));
+    });
+    chartEl.appendChild(b);
+  });
+
+  /* ----- Pesan, tombol cepat, kecepatan ----- */
+  msgEl.addEventListener('input', function () {
+    stopPlay(); buildStrip(-1); markChart(null);
+    var seq = sequence();
+    var ch = seq.length ? seq[seq.length - 1] : ' ';
+    showLetter(ch); poseTo(anglesFor(ch));
+    say('Menunjukkan huruf yang baru kamu ketik. Tekan Mainkan untuk seluruh pesan.');
+  });
+  playBtn.addEventListener('click', play);
+  Array.prototype.forEach.call(document.querySelectorAll('.sema-chip[data-msg]'), function (b) {
+    b.addEventListener('click', function () {
+      stopPlay(); msgEl.value = b.getAttribute('data-msg'); buildStrip(-1); play();
+    });
+  });
+
+  /* ----- Seret lengan untuk menyusun huruf sendiri ----- */
+  function pose() { return arms.map(function (m) { return (((Math.round(m.target / 45)) % 8) + 8) % 8; }); }
+  function letterFromPose() {
+    var p = pose().sort(function (a, b) { return a - b; });
+    return PAIR[p[0] + ',' + p[1]];
+  }
+  function rawAngle(e, i) {
+    var p = toSvg(e.clientX, e.clientY);
+    if (!p) return null;
+    var dx = p.x - arms[i].x, dy = p.y - SY;
+    if (Math.hypot(dx, dy) < 12) return null;
+    return Math.atan2(-dx, dy) * 180 / Math.PI;
+  }
+  function updateDrag(e) {
+    var raw = rawAngle(e, drag.i);
+    if (raw === null) return;
+    drag.raw = raw;
+    arms[drag.i].target = arms[drag.i].ang + shortest(arms[drag.i].ang, raw);
+    var snap = Math.round(raw / 45) * 45, r = snap * Math.PI / 180;
+    var x = arms[drag.i].x - 214 * Math.sin(r), y = SY + 214 * Math.cos(r);
+    guide.style.display = '';
+    gLine.setAttribute('x1', arms[drag.i].x); gLine.setAttribute('y1', SY); gLine.setAttribute('x2', x.toFixed(1)); gLine.setAttribute('y2', y.toFixed(1));
+    gDot.setAttribute('cx', x.toFixed(1)); gDot.setAttribute('cy', y.toFixed(1));
+  }
+  function endDrag() {
+    var i = drag.i, raw = drag.raw;
+    arms[i].g.classList.remove('grab');
+    guide.style.display = 'none';
+    if (raw !== undefined) {
+      var snap = Math.round(raw / 45) * 45;
+      arms[i].target = arms[i].ang + shortest(arms[i].ang, snap);
+    } else {
+      arms[i].target = arms[i].ang + shortest(arms[i].ang, Math.round(arms[i].ang / 45) * 45);
+    }
+    drag = null;
+    var ch = letterFromPose();
+    if (ch !== undefined) {
+      showLetter(ch); markChart(ch);
+      say(ch === ' ' ? 'Kedua lengan turun: tanda spasi.' : 'Posisi ini adalah huruf ' + ch + '.');
+    } else {
+      showLetter('?'); markChart(null);
+      say('Posisi ini belum dipakai untuk huruf. Coba geser salah satu lengan.');
+    }
+    ensureLoop();
+  }
+  svg.addEventListener('pointerdown', function (e) {
+    var g = e.target.closest ? e.target.closest('.arm') : null;
+    if (!g || guess.on) return;
+    var i = parseInt(g.getAttribute('data-i'), 10);
+    stopPlay(); buildStrip(-1);
+    drag = { i: i, pid: e.pointerId };
+    try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+    g.classList.add('grab');
+    e.preventDefault();
+    ensureLoop(); updateDrag(e);
+    say('Lepas untuk mengunci posisi ke kelipatan 45°.');
+  });
+  svg.addEventListener('pointermove', function (e) { if (drag && e.pointerId === drag.pid) updateDrag(e); });
+  ['pointerup', 'pointercancel'].forEach(function (ev) {
+    svg.addEventListener(ev, function (e) { if (drag && e.pointerId === drag.pid) endDrag(); });
+  });
+  svg.addEventListener('touchmove', function (e) { if (drag) e.preventDefault(); }, { passive: false });
+
+  /* ----- Mode tebak huruf ----- */
+  var guess = { on: false, answer: null, tries: 0, correct: 0, streak: 0, locked: false, lastCh: null };
+  var scoreEl = document.getElementById('sema-score'), triesEl = document.getElementById('sema-tries'), streakEl = document.getElementById('sema-streak');
+  function updateScore() { scoreEl.textContent = guess.correct; triesEl.textContent = guess.tries; streakEl.textContent = guess.streak; }
+  function nextGuess() {
+    var letters = Object.keys(POS), ch;
+    do { ch = letters[Math.floor(Math.random() * letters.length)]; } while (ch === guess.lastCh);
+    guess.answer = ch; guess.lastCh = ch; guess.locked = false;
+    showLetter('?'); markChart(null);
+    say('Huruf apa ini? Klik huruf di tabel atau ketik di keyboard.');
+    poseTo(anglesFor(ch));
+  }
+  function answer(ch) {
+    if (!guess.on || guess.locked) return;
+    guess.tries++;
+    if (ch === guess.answer) {
+      guess.correct++; guess.streak++; guess.locked = true; moodT = 1.3; ensureLoop();
+      showLetter(ch); markChart(ch);
+      say('Benar! Itu huruf ' + ch + '.');
+      updateScore();
+      setTimeout(function () { if (guess.on) nextGuess(); }, 1500);
+    } else {
+      guess.streak = 0;
+      say('Belum tepat, coba lagi.');
+      stageEl.classList.remove('shake'); void stageEl.offsetWidth; stageEl.classList.add('shake');
+      updateScore();
+    }
+  }
+  function setGuess(on) {
+    guess.on = on;
+    playPanel.hidden = on; guessPanel.hidden = !on;
+    chartEl.classList.toggle('guess', on);
+    guessBtn.textContent = on ? 'Keluar mode tebak' : 'Mode tebak huruf';
+    stopPlay(); buildStrip(-1);
+    if (on) { guess.tries = 0; guess.correct = 0; guess.streak = 0; updateScore(); nextGuess(); }
+    else { showLetter(' '); markChart(null); poseTo([0, 0]); say('Seret lengan penyandi untuk menyusun huruf sendiri.'); }
+  }
+  guessBtn.addEventListener('click', function () { setGuess(!guess.on); });
+  skipBtn.addEventListener('click', function () { if (guess.on) { guess.streak = 0; updateScore(); nextGuess(); } });
+
+  /* ----- Keyboard ----- */
+  var secInView = false;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { secInView = es[0].isIntersecting; }, { threshold: 0.15 }).observe(document.getElementById('semaphore'));
+  } else { secInView = true; }
+  document.addEventListener('keydown', function (e) {
+    if (!secInView || e.ctrlKey || e.metaKey || e.altKey) return;
+    var t = e.target && e.target.tagName;
+    if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+    if (e.key.length !== 1) return;
+    var ch = e.key.toUpperCase();
+    if (ch < 'A' || ch > 'Z') return;
+    if (guess.on) { answer(ch); return; }
+    stopPlay(); buildStrip(-1); showLetter(ch); markChart(ch);
+    say('Huruf ' + ch + ' dari keyboard.');
+    poseTo(anglesFor(ch));
+  });
+
+  /* ----- Keadaan awal: huruf pertama pesan sudah diragakan ----- */
+  var first = sequence()[0] || 'A';
+  var a0 = anglesFor(first);
+  arms.forEach(function (m, i) { m.ang = m.target = a0[i]; });
+  showLetter(first); markChart(first); buildStrip(-1);
+  ensureLoop();
+})();
+
+/* ---------- Penerjemah Morse ---------- */
+(function () {
+  var MORSE = {
+    A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',
+    N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..',
+    '0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'
+  };
+  var REV = {};
+  Object.keys(MORSE).forEach(function (k) { REV[MORSE[k]] = k; });
+
+  var modeEl = document.getElementById('mode');
+  var inEl = document.getElementById('pesan');
+  var outEl = document.getElementById('hasil');
+  var EMPTY = 'Hasil akan muncul di sini...';
+
+  function encode(text) {
+    return text.toUpperCase().split(' ').map(function (word) {
+      return word.split('').filter(function (c) { return MORSE[c]; }).map(function (c) { return MORSE[c]; }).join(' ');
+    }).filter(function (w) { return w.length; }).join(' / ');
+  }
+  function decode(code) {
+    return code.trim().split(/\s*\/\s*/).map(function (word) {
+      return word.split(/\s+/).filter(function (t) { return t.length; }).map(function (t) { return REV[t] || '?'; }).join('');
+    }).join(' ');
+  }
+  function run() {
+    var v = inEl.value;
+    if (!v.trim()) { outEl.textContent = EMPTY; return; }
+    outEl.textContent = (modeEl.value === 'encode' ? encode(v) : decode(v)) || EMPTY;
+  }
+  document.getElementById('btn-terjemah').addEventListener('click', run);
+  inEl.addEventListener('input', run);
+  modeEl.addEventListener('change', run);
+  document.getElementById('btn-hapus').addEventListener('click', function () {
+    inEl.value = ''; outEl.textContent = EMPTY; inEl.focus();
+  });
+  document.getElementById('btn-salin').addEventListener('click', function () {
+    var btn = this, text = outEl.textContent;
+    if (text === EMPTY) return;
+    function done() { btn.textContent = 'Tersalin'; setTimeout(function () { btn.textContent = 'Salin hasil'; }, 1500); }
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(outEl);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Teks terpilih, salin manual';
+      setTimeout(function () { btn.textContent = 'Salin hasil'; }, 2500);
+    }
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+})();
+
+/* ---------- Kuis ---------- */
+(function () {
+  var btn = document.getElementById('btn-jawab');
+  var out = document.getElementById('jawab');
+  var shown = false;
+  btn.addEventListener('click', function () {
+    shown = !shown;
+    out.innerHTML = shown ? '<b>Robert Baden-Powell</b>, pendiri gerakan kepanduan modern dari Inggris.' : '';
+    btn.textContent = shown ? 'Sembunyikan jawaban' : 'Lihat jawaban';
+  });
+})();
+</script>
+
+</html>
